@@ -65,7 +65,7 @@ function moveWhite(data) {
     // console.log(matriz)
 
     // console.log( movesWhite)
-    movesWhite++;
+    // movesWhite++;
 
     let result;
     if (max > 0){

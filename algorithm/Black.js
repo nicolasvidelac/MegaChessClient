@@ -62,11 +62,11 @@ function moveBlack(data) {
     let index = 0;
     index = possibleMovementsBlack.findIndex( s => s.value == max);
 
-    console.log(possibleMovementsBlack[index])
+    // console.log(possibleMovementsBlack[index])
     // console.log(matriz)
 
     // console.log(movesBlack)
-    movesBlack++;
+    // movesBlack++;
 
     let result;
     if (max > 0){

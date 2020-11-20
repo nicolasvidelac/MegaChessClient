@@ -9,7 +9,9 @@ const { TIMEOUT } = require('dns');
 var authtoken = fs.readFileSync('authtoken.txt').toString();
 
 //genera el websocket
-var ws = new W3CWebSocket(`ws://megachess.herokuapp.com/service?authtoken=${authtoken}`,'',[[[[],],],closetimeout = 500000000])
+var ws = new W3CWebSocket(
+    `ws://megachess.herokuapp.com/service?authtoken=${authtoken}`
+)
 
 
 //metodo que se ejecuta cuando la conexion se establece
@@ -29,8 +31,6 @@ ws.onmessage = ({data}) => {
     //convertimos el json que llega en un objeto legible
     data = JSON.parse(data);
 
-    // console.log(data.event);
-
     //lo que realizamos depende de la accion que haya llegado en el json
     switch (data.event){
 
@@ -44,7 +44,7 @@ ws.onmessage = ({data}) => {
             break;
 
         case 'your_turn':
-            // console.log(data.data.actual_turn);
+            console.log(data.data.actual_turn);
             My_Turn.move(ws, data.data);
             break;
 
