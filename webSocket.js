@@ -37,11 +37,12 @@ ws.onmessage = ({data}) => {
             break;
 
         case 'ask_challenge':
+            console.log(data.data.username)
             Challenged.challenged(ws, data.data);
             break;
 
         case 'your_turn':
-            // console.log(data.data.board);
+            console.log(data.data.actual_turn);
             My_Turn.move(ws, data.data);
             break;
 

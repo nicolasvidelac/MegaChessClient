@@ -1,121 +1,478 @@
-const { blackPieces } = require("../enums/pieces");
-const letterToName = require('../enums/letterToName');
+const { blackPieces, whitePieces } = require("../enums/pieces");
+const { letterToName } = require('../enums/letterToName');
 const { valuePieces } = require("../enums/valuePieces");
 
-
-let possibleMovements = [];
+//arreglo donde guardo todos los posibles movimientos a hacer esta jugada
+let possibleMovementsWhite = [];
+let movesWhite = 0;
 
 function moveWhite(data) {
 
 
-    let matriz = matrix(data);
+    //vacio el arreglo porque tiene movimientos de la jugada anterior
+    possibleMovementsWhite = [ ];
+
+
+    //genero una matriz con el board que se me pasa
+    let matriz = makeMatriz(data);
     
+    //itero sobre toda la matriz buscando mis piezas
+     for(let col = 0; col < 16; col++){
+        for(let row = 15; row > 0; row--){
 
-    possiblePawnMoves(matriz);
+            switch (matriz[row][col]){
 
+                case whitePieces[0]://Pawn
+                    pawnMoves(matriz, row, col)
+                    break;
 
-    //busco cual de los resultados es el que tiene el mayor valor.
+                case whitePieces[1]://Rook
+                    break;
+
+                case whitePieces[2]://Bishop
+                    break;
+
+                case whitePieces[3]://Horse
+                    break;
+
+                case whitePieces[4]://Queen
+                    queenMoves(matriz, row, col)
+                    break;
+
+                case whitePieces[5]://King
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    // busco cual de los resultados es el que tiene el mayor valor.
     let max = 0; 
 
-
-    possibleMovements.forEach(pm => {
+    possibleMovementsWhite.forEach(pm => {
         if (pm.value >= max){
             max = pm.value
         }
     })
 
+    // guardo el indice de ese maximo
     let index = 0;
-    index = possibleMovements.findIndex( s => s.value == max);
+    index = possibleMovementsWhite.findIndex( s => s.value == max);
 
+    // console.log(matriz)
+
+    console.log( movesWhite)
+    movesWhite++;
+
+    //guardo el json a devolver
     let result = JSON.stringify({
         action: 'move',
         data: {
             board_id: data.board_id,
             turn_token: data.turn_token,
-            from_row: possibleMovements[index].from_row,
-            from_col: possibleMovements[index].from_col,
-            to_row: possibleMovements[index].to_row,
-            to_col: possibleMovements[index].to_col,
+            from_row: possibleMovementsWhite[index].from_row,
+            from_col: possibleMovementsWhite[index].from_col,
+            to_row: possibleMovementsWhite[index].to_row,
+            to_col: possibleMovementsWhite[index].to_col,
         }
     });
 
-    possibleMovements = [];
-
-    //devuelvo un json con los datos desde y hacia del movimiento de mayor valor
+    // devuelvo un json con los datos desde y hacia del movimiento de mayor valor
     return result;
+
 }
 
-function possiblePawnMoves(matriz){
+ function queenMoves(matriz, row, col){
 
-    for(let col = 0; col < 16; col++){
-        for(let row = 13; row > 7; row--){
-            if(matriz[row][col] == 'P'){
+    loop:
+    //* busca la primera pieza que encuentra adelante
+    for (let i = row-1; i > 1; i--){
 
-
-                //si todavia no se mueve y no tiene nada en las dos filas de adelante
-                if((row == 13 || row == 12) && matriz[row-1][col] == ' ' && matriz[row-2][col] == ' ' ){
-
-                    possibleMovements.push(
-                        {
-                            value: (valuePieces.Pawn) * 3,
-                            from_row: row,
-                            from_col: col,
-                            to_row: row-2,
-                            to_col: col
-                        }
-                    )
+        //busco una negra para comer
+        if(blackPieces.includes(matriz[i][col])){
+            possibleMovementsWhite.push(
+                {
+                    value: ((valuePieces[letterToName[matriz[i][col]]]) * 10),
+                    from_row: row,
+                    from_col: col,
+                    to_row: i,
+                    to_col: col
                 }
-                //si tiene algo a la derecha para comer
-                if((blackPieces.includes(matriz[row-1][col+1]))){
-                    possibleMovements.push(
-                        {
-                            value: valuePieces[letterToName[matriz[row-1][col+1]]],
-                            from_row: row,
-                            from_col: col,
-                            to_row: row-1,
-                            to_col: col+1
-                        }
-                    )
+            )
+            break loop;
+        }
+
+        //busco una blanca para saber hasta adonde me puedo mover
+        else if(whitePieces.includes(matriz[i][col])){
+
+            //comprueba que este a mas de un lugar de distancia esa pieza
+            if(row - i > 1){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Queen,
+                        from_row: row,
+                        from_col: col,
+                        to_row: (i+1),
+                        to_col: col
+                    }
+                )
+
+            } 
+
+            break loop;
+        }
+    } 
+
+    //* busca la primera pieza que encuentra atras
+    loop:
+    for (let i = row; i <= 15; i++){
+
+        //si encuentra una negra, la come
+        if(blackPieces.includes(matriz[i][col])){
+            possibleMovementsWhite.push(
+                {
+                    value: ((valuePieces[letterToName[matriz[i][col]]]) * 10),
+                    from_row: row,
+                    from_col: col,
+                    to_row: i,
+                    to_col: col
                 }
+            )
+            break loop;
+        }
 
-                //si tiene algo a la izquierda para comer
-                if(blackPieces.includes(matriz[row-1][col-1])){
-
-                    possibleMovements.push(
-                        {
-                            value: valuePieces[letterToName[matriz[row+1][col-1]]],
-                            from_row: row,
-                            from_col: col,
-                            to_row: row-1,
-                            to_col: col-1
-                        }
-                    )
-                }
-
-                //si no tiene nada adelante
-                if(blackPieces.includes(matriz[row-1][col] == ' ')){
-
-                    possibleMovements.push(
-                        {
-                            value: (valuePieces.Pawn),
-                            from_row: row,
-                            from_col: col,
-                            to_row: row-1,
-                            to_col: col
-                        }
-                    )
-                }
-
+        //si encuentra una blanca con un espacio vacio adelante, 
+        //se mueve a ese espacio
+        else if(whitePieces.includes(matriz[i][col])){
+            if ((i - row > 1)){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Queen,
+                        from_row: row,
+                        from_col: col,
+                        to_row: (i-1),
+                        to_col: col
+                    }
+                )    
             }
 
+            break loop;
+
+        }
+    } 
+
+    //* busca la primera pieza a la izquierda
+    loop:
+    for (let j = col; j >= 0; j--){
+
+        //si encuentra una negra, la come
+        if(blackPieces.includes(matriz[row][j])){
+            possibleMovementsWhite.push(
+                {
+                    value: ((valuePieces[letterToName[matriz[row][j]]]) * 10),
+                    from_row: row,
+                    from_col: col,
+                    to_row: row,
+                    to_col: j
+                }
+            )
+            break loop;
+        }
+
+        //si encuentra una blanca con un espacio vacio a la derecha, 
+        //se mueve a ese espacio
+        else if(whitePieces.includes(matriz[row][j]) ){
+            if(col - j > 1){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Queen,
+                        from_row: row,
+                        from_col: col,
+                        to_row: row,
+                        to_col: (j+1)
+                    }
+                )
+            }
+
+            break loop;
+        }
+
+    }
+
+    //* busca la primera pieza a la derecha
+    loop:
+    for (let j = col; j < 16; j++){
+
+        //si encuentra una negra, la come
+        if(blackPieces.includes(matriz[row][j])){
+            possibleMovementsWhite.push(
+                {
+                    value: ((valuePieces[letterToName[matriz[row][j]]]) * 10),
+                    from_row: row,
+                    from_col: col,
+                    to_row: row,
+                    to_col: j
+                }
+            )
+            break loop;
+        }
+
+        //si encuentra una blanca con un espacio vacio a la izquierda, 
+        //se mueve a ese espacio
+        else if(whitePieces.includes(matriz[row][j]) ){
+            if (col - j > 1) {
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Queen,
+                        from_row: row,
+                        from_col: col,
+                        to_row: row,
+                        to_col: (j-1)
+                    }
+                )
+            }                
+            break loop;
+        }
+
+    }
+
+    //* busca la primera pieza en diagonal superior izquierda
+    loop:
+    for (let i = row; i >= 0; i--){
+        for (let j = col; j >= 0; j--){
+
+            //si encuentra una negra, la come
+            if(blackPieces.includes(matriz[i][j])){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces[letterToName[matriz[i][j]]] * 10 ,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                break loop;
+            }
+
+            //si encuentra una blanca con un espacio vacio atras, 
+            //se mueve a ese espacio
+            else if(whitePieces.includes(matriz[i][j])){
+                if((row - i > 1) && (col - j > 1)){
+                    possibleMovementsWhite.push(
+                        {
+                            value: valuePieces.Queen,
+                            from_row: row,
+                            from_col: col,
+                            to_row: i+1,
+                            to_col: j+1
+                        }
+                    )
+                }
+
+                break loop;
+            }
         }
     }
 
-    
+    //* busca la primera pieza en diagonal superior derecha
+    loop:
+    for (let i = row; i >= 0; i--){
+        for (let j = col; j <= 15; j++){
+
+            //si encuentra una negra, la come
+            if(blackPieces.includes(matriz[i][j])){
+                possibleMovementsWhite.push(
+                    {
+                        value: ((valuePieces[letterToName[matriz[i][j]]]) * 10),
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                break loop;
+            }
+
+            //si encuentra una blanca con un espacio vacio atras, 
+            //se mueve a ese espacio
+            else if(whitePieces.includes(matriz[i][j])){
+                if  (row - i > 1 &&  (j - col > 1)){
+                    possibleMovementsWhite.push(
+                        {
+                            value: valuePieces.Queen,
+                            from_row: row,
+                            from_col: col,
+                            to_row: i+1,
+                            to_col: j-1
+                        }
+                    )
+                }
+
+                break loop;
+            }
+        }
+    }
+
+    //* busca la primera pieza en diagonal inferior izquierda"
+    loop: 
+    for (let i = row; i <= 15; i++){
+        for (let j = col; j >= 0; j--){
+
+            //si encuentra una negra, la come
+            if(blackPieces.includes(matriz[i][j])){
+                possibleMovementsWhite.push(
+                    {
+                        value: ((valuePieces[letterToName[matriz[i][j]]]) * 10),
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                break loop;
+            }
+
+            //si encuentra una blanca con un espacio vacio atras, 
+            //se mueve a ese espacio
+            else if(whitePieces.includes(matriz[i][j]) ){
+                if ((col - j > 1) && (i - row > 1)){
+                    possibleMovementsWhite.push(
+                        {
+                            value: valuePieces.Queen,
+                            from_row: row,
+                            from_col: col,
+                            to_row: i-1,
+                            to_col: j+1
+                        }
+                    )
+                }
+
+                break loop;
+            }
+        }
+    }
+
+    //* busca la primera pieza en diagonal inferior derecha
+    loop:
+    for (let i = row; i <= 15; i++){
+        for (let j = col; j <= 15; j++){
+
+            //si encuentra una negra, la come
+            if(blackPieces.includes(matriz[i][j])){
+                possibleMovementsWhite.push(
+                    {
+                        value: ((valuePieces[letterToName[matriz[i][j]]]) * 10),
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                break loop;
+            }
+
+            //si encuentra una blanca con un espacio vacio atras, 
+            //se mueve a ese espacio
+            else if(whitePieces.includes(matriz[i][j]) ){
+                if((j - col > 1) && (i - row > 1)){
+                    possibleMovementsWhite.push(
+                        {
+                            value: valuePieces.Queen,
+                            from_row: row,
+                            from_col: col,
+                            to_row: i-1,
+                            to_col: j-1
+                        }
+                    )
+                }
+
+                break loop;
+            }
+        }
+    }
 
 }
 
-function matrix(data){
+ function pawnMoves(matriz, row, col){
+
+    //si todavia no se mueve y no tiene nada en las dos filas de adelante, que se mueva 2 filas
+    if((row == 12) && matriz[row-1][col] == ' ' && matriz[row-2][col] == ' ' ){
+
+        possibleMovementsWhite.push(
+            {
+                value: ((valuePieces.Pawn) * 7),
+                from_row: row,
+                from_col: col,
+                to_row: (row-2),
+                to_col: col
+            }
+        )
+    }
+        //si todavia no se mueve y no tiene nada en las dos filas de adelante, que se mueva 2 filas
+    if((row == 13 ) && matriz[row-1][col] == ' ' && matriz[row-2][col] == ' ' ){
+
+        possibleMovementsWhite.push(
+            {
+                value: ((valuePieces.Pawn) * 6),
+                from_row: row,
+                from_col: col,
+                to_row: (row-2),
+                to_col: col
+            }
+        )
+    }
+
+    //si tiene algo negro a la derecha para comer, que lo coma
+    if((blackPieces.includes(matriz[row-1][col+1]))){
+        possibleMovementsWhite.push(
+            {
+                value: ((valuePieces[letterToName[matriz[row-1][col+1]]]) * 10),
+                from_row: row,
+                from_col: col,
+                to_row: (row-1),
+                to_col: (col+1)
+            }
+        )
+    }
+
+    //si tiene algo negro a la izquierda para comer, que lo coma
+    if(blackPieces.includes(matriz[row-1][col-1])){
+
+        possibleMovementsWhite.push(
+            {
+                value: ((valuePieces[letterToName[matriz[row-1][col-1]]]) * 10),
+                from_row: row,
+                from_col: col,
+                to_row: (row-1),
+                to_col: (col-1)
+            }
+        )
+    }
+
+    //si no tiene nada adelante, y en la fila 8 no hay otra pieza, que se mueva 1 fila
+    if(matriz[row-1][col] == ' ' && matriz[8][col] == ' '){
+        
+        possibleMovementsWhite.push(
+            {
+                //entre mas cerca este de convertirse en reina (fila 8), mas alto el puntaje
+                value: ((valuePieces.Pawn) * 10 - ((row-8-1) * 10)),
+                from_row: row,
+                from_col: col,
+                to_row: (row-1),
+                to_col: col
+            }
+        
+
+        )
+    }
+
+    
+}
+
+function makeMatriz(data){
     let board = data.board;
 
     let index = 0;
