@@ -975,7 +975,7 @@ function pawnMoves(matriz, row, col){
             }
         )
     }
-    console.log(row, col, matriz)
+    // console.log(row, col, matriz)
     //si tiene algo blanco a la izquierda para comer, que lo coma
     if((whitePieces.includes(matriz[row+1][col+1]))){
         possibleMovementsBlack.push(
