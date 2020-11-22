@@ -9,10 +9,13 @@ const { TIMEOUT } = require('dns');
 var authtoken = fs.readFileSync('authtoken.txt').toString();
 
 //genera el websocket
-var ws = new W3CWebSocket(
-    `ws://megachess.herokuapp.com/service?authtoken=${authtoken}`
-)
+let ws;
 
+createWS();
+
+function createWS(){
+    ws = new W3CWebSocket(`ws://megachess.herokuapp.com/service?authtoken=${authtoken}`)
+}
 
 //metodo que se ejecuta cuando la conexion se establece
 ws.onopen = () => {
@@ -22,7 +25,7 @@ ws.onopen = () => {
 //metodo que se ejecuta cuando la conexion se cierra
 ws.onclose = function(){
     console.log("Connection closed");
-    ws = null;
+    createWS(); 
 }
 
 //metodo que se ejecuta cuando llega un mensaje
@@ -63,3 +66,4 @@ ws.onmessage = ({data}) => {
             break;
     }
 }
+

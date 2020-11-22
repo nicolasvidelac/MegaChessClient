@@ -3,10 +3,12 @@ const { letterToName } = require('../enums/letterToName');
 const { valuePieces } = require("../enums/valuePieces");
 const { moveWhite } = require("./White");
 const { move } = require("../responses/my_turn");
+const movePiece = require("../extras/movePiece").movePiece;
 const weightPieces = require("../enums/weightPieces").weightPieces;
 
 //arreglo donde guardo todos los posibles movimientos a hacer esta jugada
 let possibleMovementsBlack = [];
+let iterLevel;
 
 function moveBlack(board) {
 
@@ -19,6 +21,7 @@ function moveBlack(board) {
     //itero sobre toda la matriz buscando mis piezas
     for(let col = 0; col < 16; col++){
         for(let row = 0; row < 16; row++){
+            // console.log(matriz, row, col, iterLevel)
 
             switch (matriz[row][col]){
 
@@ -65,22 +68,17 @@ function moveBlack(board) {
     let index = 0;
     index = possibleMovementsBlack.findIndex( s => s.value == max);
 
-    let result;
-        result = {
-            value: possibleMovementsBlack[index].value,
-            from_row: possibleMovementsBlack[index].from_row,
-            from_col: possibleMovementsBlack[index].from_col,
-            to_row: possibleMovementsBlack[index].to_row,
-            to_col: possibleMovementsBlack[index].to_col,
-        }
+    let result = {
+        value: possibleMovementsBlack[index].value,
+        from_row: possibleMovementsBlack[index].from_row,
+        from_col: possibleMovementsBlack[index].from_col,
+        to_row: possibleMovementsBlack[index].to_row,
+        to_col: possibleMovementsBlack[index].to_col,
+    }
     
-
     // devuelvo un json con los datos desde y hacia del movimiento de mayor valor
     return result;
-    
-
 }
-
 
 function horseMoves(matriz, row, col){
 
@@ -305,7 +303,6 @@ function horseMoves(matriz, row, col){
             )
         }
     }
-
 }
 
 function kingMoves(matriz, row, col){
@@ -513,7 +510,6 @@ function bishopMoves(matriz, row, col){
                     to_col: j
                 }
             )
-
             break loop;
         }
 
@@ -531,12 +527,9 @@ function bishopMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
-        
     }
-
 
     //* busca la primera pieza en diagonal inferior izquierda
     loop:
@@ -553,7 +546,6 @@ function bishopMoves(matriz, row, col){
                     to_col: j
                 }
             )
-
             break loop;
         }
 
@@ -571,10 +563,8 @@ function bishopMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
-        
     }
 
     //* busca la primera pieza en diagonal superior derecha"
@@ -592,7 +582,6 @@ function bishopMoves(matriz, row, col){
                     to_col: j
                 }
             )
-
             break loop;
         }
 
@@ -610,7 +599,6 @@ function bishopMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
     }
@@ -630,7 +618,6 @@ function bishopMoves(matriz, row, col){
                     to_col: j
                 }
             )
-
             break loop;
         }
 
@@ -647,9 +634,7 @@ function bishopMoves(matriz, row, col){
                         to_col: j-1
                     }
                 )
-
             }
-
             break loop;
         }
     }
@@ -671,7 +656,6 @@ function queenMoves(matriz, row, col){
                     to_col: col
                 }
             )
-
             break;
         }
 
@@ -688,9 +672,7 @@ function queenMoves(matriz, row, col){
                         to_col: col
                     }
                 )
-
             } 
-
             break;
         }
     } 
@@ -818,7 +800,6 @@ function queenMoves(matriz, row, col){
                     to_col: j
                 }
             )
-
             break loop;
         }
 
@@ -836,7 +817,6 @@ function queenMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
         
@@ -857,7 +837,6 @@ function queenMoves(matriz, row, col){
                     to_col: j
                 }
             )
-
             break loop;
         }
 
@@ -875,7 +854,6 @@ function queenMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
         
@@ -896,7 +874,6 @@ function queenMoves(matriz, row, col){
                     to_col: j
                 }
             )
-
             break loop;
         }
 
@@ -914,7 +891,6 @@ function queenMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
     }
@@ -951,14 +927,10 @@ function queenMoves(matriz, row, col){
                         to_col: j-1
                     }
                 )
-
             }
-
             break loop;
         }
-        
     }
-
 }
 
 function pawnMoves(matriz, row, col){
@@ -975,12 +947,10 @@ function pawnMoves(matriz, row, col){
                 to_col: col
             }
         )
-
     }
 
     //si todavia no se mueve y no tiene nada en las dos filas de adelante, que se mueva 2 filas
     if((row == 2 ) && matriz[row+1][col] == ' ' && matriz[row+2][col] == ' ' ){
-
         possibleMovementsBlack.push(
             {
                 value: ((valuePieces.Pawn) * weightPieces.secondRowPawn),
@@ -990,9 +960,8 @@ function pawnMoves(matriz, row, col){
                 to_col: col
             }
         )
-
     }
-
+    console.log(row, col, matriz)
     //si tiene algo blanco a la izquierda para comer, que lo coma
     if((whitePieces.includes(matriz[row+1][col+1]))){
         possibleMovementsBlack.push(
@@ -1004,7 +973,6 @@ function pawnMoves(matriz, row, col){
                 to_col: (col+1)
             }
         )
-
     }
 
     //si tiene algo blanco a la derecha para comer, que lo coma
@@ -1019,7 +987,6 @@ function pawnMoves(matriz, row, col){
                 to_col: (col-1)
             }
         )
-
     }
 
     //si no tiene nada adelante, y en la fila 7 no hay otra pieza, que se mueva 1 fila
@@ -1035,10 +1002,7 @@ function pawnMoves(matriz, row, col){
                 to_col: col
             }
         )
-
     }
-
-    
 }
 
 function makeMatriz(board){

@@ -1,16 +1,21 @@
 const { blackPieces, whitePieces } = require("../enums/pieces");
 const { letterToName } = require('../enums/letterToName');
 const { valuePieces } = require("../enums/valuePieces");
+const { moveBlack } = require("./Black");
 const weightPieces = require("../enums/weightPieces").weightPieces;
+const movePiece = require("../extras/movePiece").movePiece;
+const { move } = require("../responses/my_turn");
 
 //arreglo donde guardo todos los posibles movimientos a hacer esta jugada
 let possibleMovementsWhite = [];
+let iterLevel;
 
 function moveWhite(board) {
 
     //vacio el arreglo porque tiene movimientos de la jugada anterior
     possibleMovementsWhite = [ ];
 
+    iterLevel = iterDeep;
 
     //genero una matriz 
     let matriz = makeMatriz(board);
@@ -18,7 +23,8 @@ function moveWhite(board) {
     //itero sobre toda la matriz buscando mis piezas
      for(let col = 0; col < 16; col++){
         for(let row = 15; row > 0; row--){
-
+            // console.log("iterlevel: ", iterLevel)
+            // console.log(moveWhite.caller)
             switch (matriz[row][col]){
 
                 case whitePieces[0]: //Pawn
@@ -64,40 +70,26 @@ function moveWhite(board) {
     let index = 0;
     index = possibleMovementsWhite.findIndex( s => s.value == max);
 
-    let result;
-    if (max > 0){
-        result = {
-            value: possibleMovementsWhite[index].value,
-            from_row: possibleMovementsWhite[index].from_row,
-            from_col: possibleMovementsWhite[index].from_col,
-            to_row: possibleMovementsWhite[index].to_row,
-            to_col: possibleMovementsWhite[index].to_col,
-        }
-    }
-    
-    else {
-        result = {
-            value: 0,
-            from_row: 0,
-            from_col: 0,
-            to_row: 0,
-            to_col: 0,
-           
-        }
+    let result = {
+        value: possibleMovementsWhite[index].value,
+        from_row: possibleMovementsWhite[index].from_row,
+        from_col: possibleMovementsWhite[index].from_col,
+        to_row: possibleMovementsWhite[index].to_row,
+        to_col: possibleMovementsWhite[index].to_col,
     }
 
     // devuelvo un json con los datos desde y hacia del movimiento de mayor valor
     return result;
-
 }
 
 function horseMoves(matriz, row, col){
+
     if (row < 14 && col < 15){
         //come en ese lugar
         if (blackPieces.includes(matriz[row+2][col+1])){
             possibleMovementsWhite.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row+2][col+1]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[row+2][col+1]]]) * weightPieces.eating) ,
                     from_row: row,
                     from_col: col,
                     to_row: row+2,
@@ -313,7 +305,6 @@ function horseMoves(matriz, row, col){
             )
         }
     }
-
 }
 
 function kingMoves(matriz, row, col){
@@ -389,7 +380,6 @@ function rookMoves(matriz, row, col){
                     }
                 )
             } 
-
             break loop;
         }
     } 
@@ -426,9 +416,7 @@ function rookMoves(matriz, row, col){
                     }
                 )    
             }
-
             break loop;
-
         }
     } 
 
@@ -464,10 +452,8 @@ function rookMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
-
     }
 
     //* busca la primera pieza a la derecha
@@ -504,7 +490,6 @@ function rookMoves(matriz, row, col){
             }                
             break loop;
         }
-
     }
 }
 
@@ -541,10 +526,8 @@ function bishopMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
-        
     }
 
     //* busca la primera pieza en diagonal superior derecha
@@ -579,7 +562,6 @@ function bishopMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
         
@@ -617,10 +599,8 @@ function bishopMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
-        
     }
 
     //* busca la primera pieza en diagonal inferior derecha
@@ -655,13 +635,10 @@ function bishopMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
-        
     }
 }
-
 
 function queenMoves(matriz, row, col){
 
@@ -698,7 +675,6 @@ function queenMoves(matriz, row, col){
                     }
                 )
             } 
-
             break loop;
         }
     } 
@@ -735,9 +711,7 @@ function queenMoves(matriz, row, col){
                     }
                 )    
             }
-
             break loop;
-
         }
     } 
 
@@ -773,10 +747,8 @@ function queenMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
-
     }
 
     //* busca la primera pieza a la derecha
@@ -813,7 +785,6 @@ function queenMoves(matriz, row, col){
             }                
             break loop;
         }
-
     }
 
     //* busca la primera pieza en diagonal superior izquierda
@@ -848,10 +819,8 @@ function queenMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
-        
     }
 
     //* busca la primera pieza en diagonal superior derecha
@@ -886,10 +855,8 @@ function queenMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
-        
     }
 
     //* busca la primera pieza en diagonal inferior izquierda"
@@ -924,10 +891,8 @@ function queenMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
-        
     }
 
     //* busca la primera pieza en diagonal inferior derecha
@@ -962,12 +927,9 @@ function queenMoves(matriz, row, col){
                     }
                 )
             }
-
             break loop;
         }
-        
     }
-
 }
 
 function pawnMoves(matriz, row, col){
@@ -985,7 +947,8 @@ function pawnMoves(matriz, row, col){
             }
         )
     }
-        //si todavia no se mueve y no tiene nada en las dos filas de adelante, que se mueva 2 filas
+    
+    //si todavia no se mueve y no tiene nada en las dos filas de adelante, que se mueva 2 filas
     if((row == 13 ) && matriz[row-1][col] == ' ' && matriz[row-2][col] == ' ' ){
 
         possibleMovementsWhite.push(
@@ -1038,30 +1001,8 @@ function pawnMoves(matriz, row, col){
                 to_row: (row-1),
                 to_col: col
             }
-        
-
         )
     }
-
-    
 }
-
-function makeMatriz(board){
-
-    let index = 0;
-    let matriz = [];
-
-    for (let i = 0; i < 16; i++){
-        let row = [];
-        for(let j = 0; j<16; j++){
-            row.push(board[index]);
-            index++;
-        }
-        matriz.push(row)
-    }
-
-    return matriz;
-}
-
 
 module.exports.moveWhite = moveWhite;
