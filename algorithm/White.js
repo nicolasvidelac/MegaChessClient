@@ -6,23 +6,14 @@ const weightPieces = require("../enums/weightPieces").weightPieces;
 //arreglo donde guardo todos los posibles movimientos a hacer esta jugada
 let possibleMovementsWhite = [];
 
-function moveWhite(board, matrizMia = null, branchLevel = null) {
+function moveWhite(board) {
 
     //vacio el arreglo porque tiene movimientos de la jugada anterior
     possibleMovementsWhite = [ ];
 
 
     //genero una matriz 
-    let matriz;
-
-    //la lleno con la matriz que mande si le mande una
-    if(matrizMia){
-        matriz = matrizMia;
-    //la lleno con el board si no le pase una
-    } else {
-        matriz = makeMatriz(board);
-    }
-
+    let matriz = makeMatriz(board);
     
     //itero sobre toda la matriz buscando mis piezas
      for(let col = 0; col < 16; col++){
@@ -72,8 +63,6 @@ function moveWhite(board, matrizMia = null, branchLevel = null) {
     // guardo el indice de ese maximo
     let index = 0;
     index = possibleMovementsWhite.findIndex( s => s.value == max);
-
-    // console.log(matriz)
 
     let result;
     if (max > 0){
