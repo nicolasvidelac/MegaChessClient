@@ -39,13 +39,18 @@ ws.onmessage = ({data}) => {
             break;
 
         case 'ask_challenge':
+            
+            //muestro quien me desafio
             console.log("challenged by ", data.data.username)
-            Challenged.challenged(ws, data.data);
+
+            //manda la respuesta al desafio
+            ws.send(Challenged.challenged(data.data));
             break;
 
         case 'your_turn':
-            console.log(data.data.actual_turn);
-            My_Turn.move(ws, data.data);
+            
+            //envio el movimiento que realizo
+            ws.send(My_Turn.move(data.data));
             break;
 
         case'gameover':

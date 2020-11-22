@@ -1,5 +1,5 @@
-function challenged(ws, data){
-        ws.send(JSON.stringify({
+function challenged(data){
+        return(JSON.stringify({
             action: 'accept_challenge',
             data: {
                 board_id : data.board_id

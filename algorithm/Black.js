@@ -1,19 +1,29 @@
 const { blackPieces, whitePieces } = require("../enums/pieces");
 const { letterToName } = require('../enums/letterToName');
 const { valuePieces } = require("../enums/valuePieces");
+const { moveWhite } = require("./White");
+const { move } = require("../responses/my_turn");
 const weightPieces = require("../enums/weightPieces").weightPieces;
 
 //arreglo donde guardo todos los posibles movimientos a hacer esta jugada
 let possibleMovementsBlack = [];
 
-function moveBlack(data) {
+function moveBlack(board, matrizMia = null, branchLevel = 0) {
 
     //vacio el arreglo porque tiene movimientos de la jugada anterior
     possibleMovementsBlack = [ ];
 
+    //genero una matriz 
+    let matriz;
 
-    //genero una matriz con el board que se me pasa
-    let matriz = makeMatriz(data);
+    //la lleno con la matriz que mande si le mande una
+    if(matrizMia){
+        matriz = matrizMia;
+
+    //la lleno con el board si no le pase una
+    } else {
+        matriz = makeMatriz(board);
+    }
     
     //itero sobre toda la matriz buscando mis piezas
     for(let col = 0; col < 16; col++){
@@ -64,36 +74,17 @@ function moveBlack(data) {
     let index = 0;
     index = possibleMovementsBlack.findIndex( s => s.value == max);
 
-    // console.log(possibleMovementsBlack[index])
+    console.log(possibleMovementsBlack)
     // console.log(matriz)
 
     let result;
-    if (max > 0){
-        result = JSON.stringify({
-            action: 'move',
-            data: {
-                board_id: data.board_id,
-                turn_token: data.turn_token,
-                from_row: possibleMovementsBlack[index].from_row,
-                from_col: possibleMovementsBlack[index].from_col,
-                to_row: possibleMovementsBlack[index].to_row,
-                to_col: possibleMovementsBlack[index].to_col,
-            }
-        })
-    }
-    else {
-        result = JSON.stringify({
-            action: 'move',
-            data: {
-                board_id: data.board_id,
-                turn_token: data.turn_token,
-                from_row: 0,
-                from_col: 0,
-                to_row: 0,
-                to_col: 0,
-            }
-        })
-    }
+        result = {
+            value: possibleMovementsBlack[index].value,
+            from_row: possibleMovementsBlack[index].from_row,
+            from_col: possibleMovementsBlack[index].from_col,
+            to_row: possibleMovementsBlack[index].to_row,
+            to_col: possibleMovementsBlack[index].to_col,
+        }
     
 
     // devuelvo un json con los datos desde y hacia del movimiento de mayor valor
@@ -104,12 +95,14 @@ function moveBlack(data) {
 
 
 function horseMoves(matriz, row, col){
+
     if (row < 14 && col < 15){
         //come en ese lugar
         if (whitePieces.includes(matriz[row+2][col+1])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row+2][col+1]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[row+2][col+1]]]) * weightPieces.eating) 
+                        - horseMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row+2, col+1)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row+2,
@@ -122,7 +115,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row+2][col+1] == ' '){
             possibleMovementsBlack.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse - horseMoves.caller.caller == move? moveWhite(null,movePiece(matriz, row, col, row+2, col+1)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row+2,
@@ -137,7 +130,7 @@ function horseMoves(matriz, row, col){
         if (whitePieces.includes(matriz[row+1][col+2])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row+1][col+2]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[row+1][col+2]]]) * weightPieces.eating) - horseMoves.caller.caller == move? moveWhite(null,movePiece(matriz, row, col, row+1, col+2)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row+1,
@@ -150,7 +143,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row+1][col+2] == ' '){
             possibleMovementsBlack.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse - horseMoves.caller.caller == move? moveWhite(null,movePiece(matriz, row, col, row+1, col+2)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row+1,
@@ -165,7 +158,7 @@ function horseMoves(matriz, row, col){
         if (whitePieces.includes(matriz[row-2][col+1])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row-2][col+1]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[row-2][col+1]]]) * weightPieces.eating) - horseMoves.caller.caller == move? moveWhite(null,movePiece(matriz, row, col, row-2, col+1)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row-2,
@@ -178,7 +171,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row-2][col+1] == ' '){
             possibleMovementsBlack.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse - horseMoves.caller.caller == move? moveWhite(null,movePiece(matriz, row, col, row-2, col+1)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row-2,
@@ -193,7 +186,7 @@ function horseMoves(matriz, row, col){
         if (whitePieces.includes(matriz[row-1][col+2])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row-1][col+2]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[row-1][col+2]]]) * weightPieces.eating) - horseMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row-1, col+2)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row-1,
@@ -206,7 +199,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row-1][col+2] == ' '){
             possibleMovementsBlack.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse - horseMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row-1, col+2)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row-1,
@@ -221,7 +214,7 @@ function horseMoves(matriz, row, col){
         if (whitePieces.includes(matriz[row-1][col-2])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row-1][col-2]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[row-1][col-2]]]) * weightPieces.eating) - horseMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row-1, col-2)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row-1,
@@ -234,7 +227,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row-1][col-2] == ' '){
             possibleMovementsBlack.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse - horseMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row-1, col-2)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row-1,
@@ -249,7 +242,7 @@ function horseMoves(matriz, row, col){
         if (whitePieces.includes(matriz[row-2][col-1])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row-2][col-1]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[row-2][col-1]]]) * weightPieces.eating) - horseMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row-2, col-1)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row-2,
@@ -262,7 +255,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row-2][col-1] == ' '){
             possibleMovementsBlack.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse - horseMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row-2, col-1)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row-2,
@@ -276,7 +269,7 @@ function horseMoves(matriz, row, col){
         if (whitePieces.includes(matriz[row+1][col-2])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row+1][col-2]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[row+1][col-2]]]) * weightPieces.eating) - horseMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row+1, col-2)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row+1,
@@ -289,7 +282,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row+1][col-2] == ' '){
             possibleMovementsBlack.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse - horseMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row+1, col-2)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row+1,
@@ -303,7 +296,7 @@ function horseMoves(matriz, row, col){
         if (whitePieces.includes(matriz[row+2][col-1])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row+2][col-1]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[row+2][col-1]]]) * weightPieces.eating) - horseMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row+2, col-1)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row+2,
@@ -316,7 +309,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row+2][col-1] == ' '){
             possibleMovementsBlack.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse - horseMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row+2, col-1)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row+2,
@@ -332,8 +325,6 @@ function kingMoves(matriz, row, col){
 
     for(let i = row - 1; 0 < i && i <= row + 1 && i < 16; i++){
         for(let j = col - 1; 0 < j && j <= col + 1 && j < 16; j++){
-            console.log(row, col)
-            console.log(i, j)
 
             //que no analice la misma posicion adonde esta
             if(j == col && i == row){
@@ -342,10 +333,9 @@ function kingMoves(matriz, row, col){
 
             //si hay una negra adelante, la come
             if(whitePieces.includes(matriz[i][j])){
-                console.log("rey come")
                 possibleMovementsBlack.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating),
+                        value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - kingMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i, j)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -356,10 +346,9 @@ function kingMoves(matriz, row, col){
 
             //si no hay nada adelante, se mueve ahi
             else if(matriz[i][j] == ' '){
-                console.log("mueve rey")
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.King,
+                        value: valuePieces.King - kingMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i, j)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -380,7 +369,7 @@ function rookMoves(matriz, row, col){
         if(whitePieces.includes(matriz[i][col])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - rookMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i, col)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: i,
@@ -397,7 +386,7 @@ function rookMoves(matriz, row, col){
             if( i - row > 1){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Rook,
+                        value: valuePieces.Rook - rookMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i-1, col)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: (i-1),
@@ -418,7 +407,7 @@ function rookMoves(matriz, row, col){
         if(whitePieces.includes(matriz[i][col])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) ,
+                    value: ((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - rookMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i, col)).value: 0 ,
                     from_row: row,
                     from_col: col,
                     to_row: i,
@@ -434,7 +423,7 @@ function rookMoves(matriz, row, col){
             if ((row - i > 1)){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Rook,
+                        value: valuePieces.Rook - rookMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i+1, col)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: (i+1),
@@ -454,7 +443,7 @@ function rookMoves(matriz, row, col){
         if(whitePieces.includes(matriz[row][j])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - rookMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row, j)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row,
@@ -470,7 +459,7 @@ function rookMoves(matriz, row, col){
             if(col - j > 1){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Rook,
+                        value: valuePieces.Rook - rookMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row, j+1)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -490,7 +479,7 @@ function rookMoves(matriz, row, col){
         if(whitePieces.includes(matriz[row][j])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - rookMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row, j)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row,
@@ -507,7 +496,7 @@ function rookMoves(matriz, row, col){
             if (col - j > 1) {
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Rook,
+                        value: valuePieces.Rook - rookMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row, j-1)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -530,7 +519,7 @@ function bishopMoves(matriz, row, col){
         if(whitePieces.includes(matriz[i][j])){
             possibleMovementsBlack.push(
                 {
-                    value: valuePieces[letterToName[matriz[i][j]]] * weightPieces.eating,
+                    value: valuePieces[letterToName[matriz[i][j]]] * weightPieces.eating - bishopMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i, j)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: i,
@@ -547,7 +536,7 @@ function bishopMoves(matriz, row, col){
             if(Math.abs(row - i) > 1 && (Math.abs(col - j) > 1)){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Bishop,
+                        value: valuePieces.Bishop - bishopMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i+1, j+1)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: i+1,
@@ -570,7 +559,7 @@ function bishopMoves(matriz, row, col){
         if(whitePieces.includes(matriz[i][j])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - bishopMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i, j)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: i,
@@ -587,7 +576,7 @@ function bishopMoves(matriz, row, col){
             if  (Math.abs(row - i) > 1 && (Math.abs(j - col) > 1)){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Bishop,
+                        value: valuePieces.Bishop - bishopMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i+1, j-1)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: i+1,
@@ -609,7 +598,7 @@ function bishopMoves(matriz, row, col){
         if(whitePieces.includes(matriz[i][j])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - bishopMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i, j)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: i,
@@ -626,7 +615,7 @@ function bishopMoves(matriz, row, col){
             if (Math.abs(col - j) > 1 && Math.abs(i - row) > 1){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Bishop,
+                        value: valuePieces.Bishop - bishopMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i-1, j+1)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: i-1,
@@ -647,7 +636,7 @@ function bishopMoves(matriz, row, col){
         if(whitePieces.includes(matriz[i][j])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - bishopMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i, j)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: i,
@@ -664,7 +653,7 @@ function bishopMoves(matriz, row, col){
             if( Math.abs(j - col) > 1 && Math.abs(i - row ) > 1){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Bishop,
+                        value: valuePieces.Bishop - bishopMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i-1, j-1)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: i-1,
@@ -688,7 +677,7 @@ function queenMoves(matriz, row, col){
         if(whitePieces.includes(matriz[i][col])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i, col)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: i,
@@ -705,7 +694,7 @@ function queenMoves(matriz, row, col){
             if( i - row > 1){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen,
+                        value: valuePieces.Queen - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i-1, col)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: (i-1),
@@ -726,7 +715,7 @@ function queenMoves(matriz, row, col){
         if(whitePieces.includes(matriz[i][col])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) ,
+                    value: ((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating)  - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i, col)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: i,
@@ -742,7 +731,7 @@ function queenMoves(matriz, row, col){
             if ((row - i > 1)){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen,
+                        value: valuePieces.Queen - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i+1, col)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: (i+1),
@@ -762,7 +751,7 @@ function queenMoves(matriz, row, col){
         if(whitePieces.includes(matriz[row][j])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row, j)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row,
@@ -778,7 +767,7 @@ function queenMoves(matriz, row, col){
             if(col - j > 1){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen,
+                        value: valuePieces.Queen - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row, j+1)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -798,7 +787,7 @@ function queenMoves(matriz, row, col){
         if(whitePieces.includes(matriz[row][j])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row, j)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: row,
@@ -815,7 +804,7 @@ function queenMoves(matriz, row, col){
             if (col - j > 1) {
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen,
+                        value: valuePieces.Queen - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row, j-1)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -836,7 +825,7 @@ function queenMoves(matriz, row, col){
         if(whitePieces.includes(matriz[i][j])){
             possibleMovementsBlack.push(
                 {
-                    value: valuePieces[letterToName[matriz[i][j]]] * weightPieces.eating,
+                    value: valuePieces[letterToName[matriz[i][j]]] * weightPieces.eating - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i, j)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: i,
@@ -853,7 +842,7 @@ function queenMoves(matriz, row, col){
             if(Math.abs(row - i) > 1 && (Math.abs(col - j) > 1)){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen,
+                        value: valuePieces.Queen - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i+1, j+1)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: i+1,
@@ -875,7 +864,7 @@ function queenMoves(matriz, row, col){
         if(whitePieces.includes(matriz[i][j])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i, j)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: i,
@@ -892,7 +881,7 @@ function queenMoves(matriz, row, col){
             if  (Math.abs(row - i) > 1 && (Math.abs(j - col) > 1)){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen,
+                        value: valuePieces.Queen - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i+1, j-1)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: i+1,
@@ -914,7 +903,7 @@ function queenMoves(matriz, row, col){
         if(whitePieces.includes(matriz[i][j])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i, j)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: i,
@@ -931,7 +920,7 @@ function queenMoves(matriz, row, col){
             if (Math.abs(col - j) > 1 && Math.abs(i - row) > 1){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen,
+                        value: valuePieces.Queen - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i-1, j+1)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: i-1,
@@ -952,7 +941,7 @@ function queenMoves(matriz, row, col){
         if(whitePieces.includes(matriz[i][j])){
             possibleMovementsBlack.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating),
+                    value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i, j)).value: 0,
                     from_row: row,
                     from_col: col,
                     to_row: i,
@@ -969,7 +958,7 @@ function queenMoves(matriz, row, col){
             if( Math.abs(j - col) > 1 && Math.abs(i - row ) > 1){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen,
+                        value: valuePieces.Queen - queenMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, i-1, j-1)).value: 0,
                         from_row: row,
                         from_col: col,
                         to_row: i-1,
@@ -993,7 +982,7 @@ function pawnMoves(matriz, row, col){
 
         possibleMovementsBlack.push(
             {
-                value: ((valuePieces.Pawn) * weightPieces.firstRowPawn),
+                value: ((valuePieces.Pawn) * weightPieces.firstRowPawn) - pawnMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row+2, col)).value: 0,
                 from_row: row,
                 from_col: col,
                 to_row: (row+2),
@@ -1008,7 +997,7 @@ function pawnMoves(matriz, row, col){
 
         possibleMovementsBlack.push(
             {
-                value: ((valuePieces.Pawn) * weightPieces.secondRowPawn),
+                value: ((valuePieces.Pawn) * weightPieces.secondRowPawn) - pawnMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row+2, col)).value: 0,
                 from_row: row,
                 from_col: col,
                 to_row: (row+2),
@@ -1022,7 +1011,7 @@ function pawnMoves(matriz, row, col){
     if((whitePieces.includes(matriz[row+1][col+1]))){
         possibleMovementsBlack.push(
             {
-                value: ((valuePieces[letterToName[matriz[row+1][col+1]]]) * weightPieces.eating),
+                value: ((valuePieces[letterToName[matriz[row+1][col+1]]]) * weightPieces.eating) - pawnMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row+1, col+1)).value: 0,
                 from_row: row,
                 from_col: col,
                 to_row: (row+1),
@@ -1037,7 +1026,7 @@ function pawnMoves(matriz, row, col){
 
         possibleMovementsBlack.push(
             {
-                value: ((valuePieces[letterToName[matriz[row+1][col-1]]]) * weightPieces.eating),
+                value: ((valuePieces[letterToName[matriz[row+1][col-1]]]) * weightPieces.eating) - pawnMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row+1, col-1)).value: 0,
                 from_row: row,
                 from_col: col,
                 to_row: (row+1),
@@ -1053,14 +1042,12 @@ function pawnMoves(matriz, row, col){
         possibleMovementsBlack.push(
             {
                 //entre mas cerca este de convertirse en reina (fila 8), mas alto el puntaje
-                value: ((valuePieces.Pawn) * weightPieces.movingFowardPawn - ((7-row-1) * 10)),
+                value: ((valuePieces.Pawn) * weightPieces.movingFowardPawn - ((7-row-1) * 10)) - pawnMoves.caller.caller == move? moveWhite(null, movePiece(matriz, row, col, row+1, col)).value: 0,
                 from_row: row,
                 from_col: col,
                 to_row: (row+1),
                 to_col: col
             }
-
-
         )
 
     }
@@ -1068,8 +1055,7 @@ function pawnMoves(matriz, row, col){
     
 }
 
-function makeMatriz(data){
-    let board = data.board;
+function makeMatriz(board){
 
     let index = 0;
     let matriz = [];
@@ -1083,6 +1069,12 @@ function makeMatriz(data){
         matriz.push(row)
     }
 
+    return matriz;
+}
+
+function movePiece(matriz, from_row, from_col, to_row, to_col){
+    matriz[to_row][to_col] = matriz[from_row][from_col];
+    matriz[from_row][from_col] = ' ';
     return matriz;
 }
 

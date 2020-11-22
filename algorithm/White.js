@@ -6,15 +6,23 @@ const weightPieces = require("../enums/weightPieces").weightPieces;
 //arreglo donde guardo todos los posibles movimientos a hacer esta jugada
 let possibleMovementsWhite = [];
 
-function moveWhite(data) {
-
+function moveWhite(board, matrizMia = null, branchLevel = null) {
 
     //vacio el arreglo porque tiene movimientos de la jugada anterior
     possibleMovementsWhite = [ ];
 
 
-    //genero una matriz con el board que se me pasa
-    let matriz = makeMatriz(data);
+    //genero una matriz 
+    let matriz;
+
+    //la lleno con la matriz que mande si le mande una
+    if(matrizMia){
+        matriz = matrizMia;
+    //la lleno con el board si no le pase una
+    } else {
+        matriz = makeMatriz(board);
+    }
+
     
     //itero sobre toda la matriz buscando mis piezas
      for(let col = 0; col < 16; col++){
@@ -69,30 +77,24 @@ function moveWhite(data) {
 
     let result;
     if (max > 0){
-        result = JSON.stringify({
-            action: 'move',
-            data: {
-                board_id: data.board_id,
-                turn_token: data.turn_token,
-                from_row: possibleMovementsWhite[index].from_row,
-                from_col: possibleMovementsWhite[index].from_col,
-                to_row: possibleMovementsWhite[index].to_row,
-                to_col: possibleMovementsWhite[index].to_col,
-            }
-        })
+        result = {
+            value: possibleMovementsWhite[index].value,
+            from_row: possibleMovementsWhite[index].from_row,
+            from_col: possibleMovementsWhite[index].from_col,
+            to_row: possibleMovementsWhite[index].to_row,
+            to_col: possibleMovementsWhite[index].to_col,
+        }
     }
+    
     else {
-        result = JSON.stringify({
-            action: 'move',
-            data: {
-                board_id: data.board_id,
-                turn_token: data.turn_token,
-                from_row: 0,
-                from_col: 0,
-                to_row: 0,
-                to_col: 0,
-            }
-        })
+        result = {
+            value: 0,
+            from_row: 0,
+            from_col: 0,
+            to_row: 0,
+            to_col: 0,
+           
+        }
     }
 
     // devuelvo un json con los datos desde y hacia del movimiento de mayor valor
@@ -119,7 +121,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row+2][col+1] == ' '){
             possibleMovementsWhite.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse,
                     from_row: row,
                     from_col: col,
                     to_row: row+2,
@@ -147,7 +149,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row+1][col+2] == ' '){
             possibleMovementsWhite.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse,
                     from_row: row,
                     from_col: col,
                     to_row: row+1,
@@ -175,7 +177,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row-2][col+1] == ' '){
             possibleMovementsWhite.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse,
                     from_row: row,
                     from_col: col,
                     to_row: row-2,
@@ -203,7 +205,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row-1][col+2] == ' '){
             possibleMovementsWhite.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse,
                     from_row: row,
                     from_col: col,
                     to_row: row-1,
@@ -231,7 +233,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row-1][col-2] == ' '){
             possibleMovementsWhite.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse,
                     from_row: row,
                     from_col: col,
                     to_row: row-1,
@@ -259,7 +261,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row-2][col-1] == ' '){
             possibleMovementsWhite.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse,
                     from_row: row,
                     from_col: col,
                     to_row: row-2,
@@ -286,7 +288,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row+1][col-2] == ' '){
             possibleMovementsWhite.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse,
                     from_row: row,
                     from_col: col,
                     to_row: row+1,
@@ -313,7 +315,7 @@ function horseMoves(matriz, row, col){
         else if(matriz[row+2][col-1] == ' '){
             possibleMovementsWhite.push(
                 {
-                    value: valuePieces.King,
+                    value: valuePieces.Horse,
                     from_row: row,
                     from_col: col,
                     to_row: row+2,
@@ -337,7 +339,6 @@ function kingMoves(matriz, row, col){
 
             //si hay una negra adelante, la come
             if(blackPieces.includes(matriz[i][j])){
-                console.log("rey come")
                 possibleMovementsWhite.push(
                     {
                         value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating),
@@ -351,7 +352,6 @@ function kingMoves(matriz, row, col){
 
             //si no hay nada adelante, se mueve ahi
             else if(matriz[i][j] == ' '){
-                console.log("mueve rey")
                 possibleMovementsWhite.push(
                     {
                         value: valuePieces.King,
@@ -1057,8 +1057,7 @@ function pawnMoves(matriz, row, col){
     
 }
 
-function makeMatriz(data){
-    let board = data.board;
+function makeMatriz(board){
 
     let index = 0;
     let matriz = [];
