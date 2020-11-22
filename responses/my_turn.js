@@ -1,3 +1,5 @@
+const makeMatriz = require('../extras/makeMatriz').makeMatriz;
+
 var moveBlack = require('../algorithm/Black').moveBlack;
 var moveWhite = require('../algorithm/White').moveWhite;
 
@@ -6,7 +8,7 @@ function move(data){
     if(data.actual_turn == 'black'){
         //ws.send(Black.moveBlack(data))
         
-        let result = moveBlack(data.board)
+        let result = moveBlack(makeMatriz(data.board), 2)
         
         return (JSON.stringify({
             action: 'move',
@@ -25,7 +27,7 @@ function move(data){
     else if(data.actual_turn == 'white'){
         // ws.send(moveWhite(data))
 
-        let result = moveWhite(data.board)
+        let result = moveWhite(makeMatriz(data.board), 2)
 
         return (JSON.stringify({
             action: 'move',
