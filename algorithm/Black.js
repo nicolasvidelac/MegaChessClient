@@ -77,7 +77,7 @@ function moveBlack(matriz, iterDeep) {
     let index = 0;
     index = possibleMovementsBlack.findIndex( s => s.value == max);
 
-    // console.log(possibleMovementsBlack)
+    console.log(possibleMovementsBlack[index])
     // console.log(matriz)
 
     let result = {
@@ -975,22 +975,22 @@ function pawnMoves(matriz, row, col){
             }
         )
     }
-    // console.log(row, col, matriz)
+    
     //si tiene algo blanco a la izquierda para comer, que lo coma
-    if((whitePieces.includes(matriz[row+1][col+1]))){
+    if((row < 15 && col <15 && whitePieces.includes(matriz[row+1][col+1]))){
         possibleMovementsBlack.push(
             {
-                value: ((valuePieces[letterToName[matriz[row+1][col+1]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row+1, col+1), iterLevel-1).value,
-                from_row: row,
-                from_col: col,
-                to_row: (row+1),
-                to_col: (col+1)
+            value: ((valuePieces[letterToName[matriz[row+1][col+1]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row+1, col+1), iterLevel-1).value,
+            from_row: row,
+            from_col: col,
+            to_row: (row+1),
+            to_col: (col+1)
             }
         )
     }
 
     //si tiene algo blanco a la derecha para comer, que lo coma
-    if(whitePieces.includes(matriz[row+1][col-1])){
+    if(row < 15 && whitePieces.includes(matriz[row+1][col-1])){
 
         possibleMovementsBlack.push(
             {
@@ -1004,7 +1004,7 @@ function pawnMoves(matriz, row, col){
     }
 
     //si no tiene nada adelante, y en la fila 7 no hay otra pieza, que se mueva 1 fila
-    if(matriz[row+1][col] == ' ' && matriz[7][col] == ' '){
+    if(row < 15 && matriz[row+1][col] == ' ' && matriz[7][col] == ' '){
         
         possibleMovementsBlack.push(
             {

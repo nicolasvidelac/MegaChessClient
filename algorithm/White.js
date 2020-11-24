@@ -8,6 +8,8 @@ const { move } = require("../responses/my_turn");
 
 //arreglo donde guardo todos los posibles movimientos a hacer esta jugada
 let possibleMovementsWhite = [];
+
+//nivel de profundidad del bucle de minimax
 let iterLevel;
 
 function moveWhite(matriz, iterDeep ) {
@@ -17,13 +19,9 @@ function moveWhite(matriz, iterDeep ) {
     //vacio el arreglo porque tiene movimientos de la jugada anterior
     possibleMovementsWhite = [];
 
-    //si lo llamaron desde el socket, seteo la profundidad de minimax
-    //si no lo llamo el socket, es porque estoy en un bucle y respeto el iterLevel que me mandaron
-    // if (moveWhite.caller == move){
-    //     iterLevel = 2
-    // }
     //si iterLevel es 0 y no viene del ws, es porque el bucle tiene que terminar 
      if(iterLevel == 0){
+        console.log("iterLevel", iterLevel)
         return {value: 0}
     }
 
@@ -99,7 +97,7 @@ function horseMoves(matriz, row, col){
         if (blackPieces.includes(matriz[row+2][col+1])){
             possibleMovementsWhite.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row+2][col+1]]]) * weightPieces.eating) ,
+                    value: ((valuePieces[letterToName[matriz[row+2][col+1]]]) * weightPieces.eating),
                     from_row: row,
                     from_col: col,
                     to_row: row+2,
