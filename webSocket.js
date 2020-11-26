@@ -1,9 +1,9 @@
 //importaciones
 var W3CWebSocket  = require('websocket').w3cwebsocket;
 var Challenged = require('./responses/challenged');
-var My_Turn = require('./responses/my_turn');
 var fs = require('fs');
-const { TIMEOUT } = require('dns');
+const { my_turn } = require('./responses/my_turn');
+const {makeMatriz} = require('./extras/makeMatriz');
 
 //lee mi authtoken de un archivo
 var authtoken = fs.readFileSync('authtoken.txt').toString();
@@ -25,7 +25,7 @@ ws.onopen = () => {
 //metodo que se ejecuta cuando la conexion se cierra
 ws.onclose = function(){
     console.log("Connection closed");
-    createWS(); 
+    // createWS(); 
 }
 
 //metodo que se ejecuta cuando llega un mensaje
@@ -52,11 +52,12 @@ ws.onmessage = ({data}) => {
 
         case 'your_turn':
             //envio el movimiento que realizo
-            ws.send(My_Turn.move(data.data));
+            ws.send(my_turn(data.data));
             break;
 
         case'gameover':
             console.log(data.data);
+            console.table(makeMatriz(data.data.board))
             break;
 
         default:
