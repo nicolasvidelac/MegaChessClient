@@ -2019,6 +2019,7 @@ function moveBlack(matriz, depth) {
         }
     }
 }
+//clg
 
 module.exports = {
     moveBlack : moveBlack,
