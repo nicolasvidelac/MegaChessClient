@@ -9,13 +9,17 @@ const {makeMatriz} = require('./extras/makeMatriz');
 var authtoken = fs.readFileSync('authtoken.txt').toString();
 
 //genera el websocket
-let ws;
-
-createWS();
+let ws = null;
 
 function createWS(){
-    ws = new W3CWebSocket(`ws://megachess.herokuapp.com/service?authtoken=${authtoken}`)
+    console.log("createWS executed")
+    if(ws == null){
+        ws = new W3CWebSocket(`ws://megachess.herokuapp.com/service?authtoken=${authtoken}`)
+        console.log("ws created")
+    }
 }
+
+createWS();
 
 //metodo que se ejecuta cuando la conexion se establece
 ws.onopen = () => {
@@ -25,7 +29,7 @@ ws.onopen = () => {
 //metodo que se ejecuta cuando la conexion se cierra
 ws.onclose = function(){
     console.log("Connection closed");
-    // createWS(); 
+    ws = null;
 }
 
 //metodo que se ejecuta cuando llega un mensaje
@@ -66,4 +70,3 @@ ws.onmessage = ({data}) => {
             break;
     }
 }
-
