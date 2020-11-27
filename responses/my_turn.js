@@ -1,46 +1,48 @@
+const { moveBlack, moveWhite } = require('../algorithm/move');
+
 const makeMatriz = require('../extras/makeMatriz').makeMatriz;
 
-var moveBlack = require('../algorithm/Black').moveBlack;
-var moveWhite = require('../algorithm/White').moveWhite;
+function my_turn(data){
+    let result;
+    let depth = 3;
 
-function move(data){
-
-    if(data.actual_turn == 'black'){
-        //ws.send(Black.moveBlack(data))
+    switch (data.actual_turn) {
         
-        let result = moveBlack(makeMatriz(data.board), 2)
+        case 'black':
+            console.log("turno black")
+            result = moveBlack(makeMatriz(data.board), depth)
         
-        return (JSON.stringify({
-            action: 'move',
-            data: {
-                board_id: data.board_id,
-                turn_token: data.turn_token,
-                from_row: result.from_row,
-                from_col: result.from_col,
-                to_row: result.to_row,
-                to_col: result.to_col,
-            }
-        }))
+            return JSON.stringify({
+                action: 'move',
+                data: {
+                    board_id: data.board_id,
+                    turn_token: data.turn_token,
+                    from_row: result.from_row,
+                    from_col: result.from_col,
+                    to_row: result.to_row,
+                    to_col: result.to_col,
+                }
+            })
+        
+        case 'white':
+            console.log("turno white")
+            result = moveWhite(makeMatriz(data.board), depth)
 
-    }
+            return JSON.stringify({
+                action: 'move',
+                data: {
+                    board_id: data.board_id,
+                    turn_token: data.turn_token,
+                    from_row: result.from_row,
+                    from_col: result.from_col,
+                    to_row: result.to_row,
+                    to_col: result.to_col,
+                }
+            })
 
-    else if(data.actual_turn == 'white'){
-        // ws.send(moveWhite(data))
-
-        let result = moveWhite(makeMatriz(data.board), 2)
-
-        return (JSON.stringify({
-            action: 'move',
-            data: {
-                board_id: data.board_id,
-                turn_token: data.turn_token,
-                from_row: result.from_row,
-                from_col: result.from_col,
-                to_row: result.to_row,
-                to_col: result.to_col,
-            }
-        }))
+        default:
+            break;
     }
 }
 
-module.exports.move = move;
+module.exports.my_turn = my_turn;

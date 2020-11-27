@@ -1,69 +1,79 @@
 //importaciones
-var W3CWebSocket  = require('websocket').w3cwebsocket;
-var Challenged = require('./responses/challenged');
-var My_Turn = require('./responses/my_turn');
-var fs = require('fs');
-const { TIMEOUT } = require('dns');
+const Challenged = require('./responses/challenged');
+const fs = require('fs');
+const { my_turn } = require('./responses/my_turn');
+const { makeMatriz} = require('./extras/makeMatriz');
+const { client } = require('websocket')
 
 //lee mi authtoken de un archivo
 var authtoken = fs.readFileSync('authtoken.txt').toString();
 
-//genera el websocket
-let ws;
+//genera el cliente websocket
+let ws = new client();
 
-createWS();
-
-function createWS(){
-    ws = new W3CWebSocket(`ws://megachess.herokuapp.com/service?authtoken=${authtoken}`)
+//realiza la conexion
+function connect(){
+    ws.connect(`ws://megachess.herokuapp.com/service?authtoken=${authtoken}`)
+    console.log("Connection opened")
 }
 
-//metodo que se ejecuta cuando la conexion se establece
-ws.onopen = () => {
-    console.log('Connection opened');
-}
+//ejecuto connect()
+connect();
 
-//metodo que se ejecuta cuando la conexion se cierra
-ws.onclose = function(){
-    console.log("Connection closed");
-    createWS(); 
-}
+//activa cuando se conecta
+ws.on('connect', function (connection) {
 
-//metodo que se ejecuta cuando llega un mensaje
-ws.onmessage = ({data}) => {
+    //accion cuando se cierra el ws
+    connection.on('close', () => {
+        console.log("Connection closed");
+        connect();
+    })
 
-    //convertimos el json que llega en un objeto legible
-    data = JSON.parse(data);
+    //accion cuando llega un mensaje
+    connection.on('message', (message) =>{
 
-    //lo que realizamos depende de la accion que haya llegado en el json
-    switch (data.event){
+        //convertimos el json que llega en un objeto legible
+        let data = JSON.parse(message.utf8Data);
 
-        case 'update_user_list':
-            console.log(data.data.users_list);
-            break;
+        //lo que realizamos depende de la accion que haya llegado en el json
+        switch (data.event){
 
-        case 'ask_challenge':
-            
-            //muestro quien me desafio
-            console.log("challenged by ", data.data.username)
+            case 'update_user_list':
+                console.log(data.data.users_list);
+                break;
 
-            //manda la respuesta al desafio
-            ws.send(Challenged.challenged(data.data));
-            break;
+            case 'ask_challenge':
+                
+                //muestro quien me desafio
+                console.log("challenged by ", data.data.username)
 
-        case 'your_turn':
-            
-            //envio el movimiento que realizo
-            ws.send(My_Turn.move(data.data));
-            break;
+                //manda la respuesta al desafio
+                connection.sendUTF(Challenged.challenged(data.data));
+                
 
-        case'gameover':
-            console.log(data.data);
-            break;
+                break;
 
-        default:
-            console.log('caso no agarrado')
-            console.log(data);
-            break;
-    }
-}
+            case 'your_turn':
+                //envio el movimiento que realizo
+                connection.sendUTF(my_turn(data.data));
+                break;
 
+            case'gameover':
+                //muestro el resultado
+                console.log(data.data);
+                //muestro el tablero
+                console.table(makeMatriz(data.data.board))
+                break;
+
+            default:
+                console.log('caso no agarrado')
+                // console.log(data);
+                break;
+        }
+    })
+})
+
+//si falla la conexion
+ws.on('connectFailed', (err) => {
+    console.log("Connection error: ", err)
+})

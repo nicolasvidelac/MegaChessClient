@@ -1,7 +1,7 @@
 const weightPieces = {
-    firstRowPawn: 11,
-    secondRowPawn: 10,
-    movingFowardPawn: 13,
+    firstRowPawn: 13,
+    secondRowPawn: 11,
+    movingFowardPawn: 15,
     eating: 10
 }
 
