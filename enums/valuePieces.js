@@ -3,7 +3,7 @@ const valuePieces = {
     Horse: 30,
     Bishop: 40,
     Rook: 60,
-    Queen: 65, //puede que 65 sea mejor, puede
+    Queen: 25, //puede que 65 sea mejor, puede
     King: 100
 }
 

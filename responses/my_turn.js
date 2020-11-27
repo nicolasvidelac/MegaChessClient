@@ -4,12 +4,13 @@ const makeMatriz = require('../extras/makeMatriz').makeMatriz;
 
 function my_turn(data){
     let result;
+    let depth = 3;
 
     switch (data.actual_turn) {
         
         case 'black':
             console.log("turno black")
-            result = moveBlack(makeMatriz(data.board))
+            result = moveBlack(makeMatriz(data.board), depth)
         
             return JSON.stringify({
                 action: 'move',
@@ -25,7 +26,7 @@ function my_turn(data){
         
         case 'white':
             console.log("turno white")
-            result = moveWhite(makeMatriz(data.board))
+            result = moveWhite(makeMatriz(data.board), depth)
 
             return JSON.stringify({
                 action: 'move',
