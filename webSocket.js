@@ -65,7 +65,7 @@ ws.on('connect', function (connection) {
 
             default:
                 console.log('caso no agarrado')
-                console.log(data);
+                // console.log(data);
                 break;
         }
     })

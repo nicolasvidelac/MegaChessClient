@@ -12,7 +12,6 @@ function moveWhite(matriz, depth) {
         return { value: 0 }
     }
     
-
     //vacio el arreglo porque tiene movimientos de la jugada anterior
     let possibleMovementsWhite = [];
     
@@ -50,8 +49,6 @@ function moveWhite(matriz, depth) {
                 default:
                     break;
             }
-
-
         }
     }
 
@@ -67,6 +64,10 @@ function moveWhite(matriz, depth) {
     // guardo el indice de ese maximo
     let index = 0;
     index = possibleMovementsWhite.findIndex( s => s.value == max);
+
+    // if(possibleMovementsWhite[index].desc != undefined){
+    //     console.log(possibleMovementsWhite[index].desc)
+    // }
 
     let result = {
         value: possibleMovementsWhite[index].value,
@@ -326,6 +327,7 @@ function moveWhite(matriz, depth) {
                             to_col: j
                         }
                     )
+                    continue;
                 }
 
                 //si no hay nada adelante, se mueve ahi
@@ -371,7 +373,7 @@ function moveWhite(matriz, depth) {
                 if(row - i > 1){
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Rook - moveBlack( movePiece(matriz, row, col, i+1, col), depth-1).value,
+                            value: valuePieces.Rook - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: (i+1),
@@ -391,7 +393,7 @@ function moveWhite(matriz, depth) {
             if(blackPieces.includes(matriz[i][col])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
+                        value: ((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, i, col), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -400,14 +402,13 @@ function moveWhite(matriz, depth) {
                 )
                 break loop;
             }
-
             //si encuentra una blanca con un espacio vacio adelante, 
             //se mueve a ese espacio
             else if(whitePieces.includes(matriz[i][col])){
                 if ((i - row > 1)){
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Rook - moveBlack( movePiece(matriz, row, col, i-1, col), depth-1).value,
+                            value: valuePieces.Rook - moveBlack( movePiece( matriz, row, col, i, col), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: (i-1),
@@ -427,43 +428,7 @@ function moveWhite(matriz, depth) {
             if(blackPieces.includes(matriz[row][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row, j), depth-1).value,
-                        from_row: row,
-                        from_col: col,
-                        to_row: row,
-                        to_col: j
-                    }
-                )
-                break loop;
-            }
-
-            //si encuentra una blanca con un espacio vacio a la derecha, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[row][j]) ){
-                if(col - j > 1){
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Rook - moveBlack( movePiece(matriz, row, col, row, j+1), depth-1).value,
-                            from_row: row,
-                            from_col: col,
-                            to_row: row,
-                            to_col: (j+1)
-                        }
-                    )
-                }
-                break loop;
-            }
-        }
-
-        //* busca la primera pieza a la derecha
-        loop:
-        for (let j = col + 1; j < 16; j++){
-
-            //si encuentra una negra, la come
-            if(blackPieces.includes(matriz[row][j])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row, j), depth-1).value,
+                        value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -479,7 +444,7 @@ function moveWhite(matriz, depth) {
                 if (col - j > 1) {
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Rook - moveBlack( movePiece(matriz, row, col, row, j-1), depth-1).value,
+                            value: valuePieces.Rook - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: row,
@@ -490,10 +455,46 @@ function moveWhite(matriz, depth) {
                 break loop;
             }
         }
+
+        //* busca la primera pieza a la derecha
+        loop:
+        for (let j = col + 1; j < 16; j++){
+
+            //si encuentra una negra, la come
+            if(blackPieces.includes(matriz[row][j])){
+                possibleMovementsWhite.push(
+                    {
+                        value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: row,
+                        to_col: j
+                    }
+                )
+                break loop;
+            }
+
+            //si encuentra una blanca con un espacio vacio a la izquierda, 
+            //se mueve a ese espacio
+            else if(whitePieces.includes(matriz[row][j]) ){
+                if (col - j > 1) {
+                    possibleMovementsWhite.push(
+                        {
+                            value: valuePieces.Rook - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value,
+                            from_row: row,
+                            from_col: col,
+                            to_row: row,
+                            to_col: (j-1)
+                        }
+                    )
+                }                
+                break loop;
+            }
+        }
+        
     }
 
     function WhiteBishopMoves(matriz, row, col){
-
         //* busca la primera pieza en diagonal superior izquierda
         loop:
         for (let i = row - 1, j = col - 1; i > 0 && j > 0; i--, j--){
@@ -502,7 +503,7 @@ function moveWhite(matriz, depth) {
             if(blackPieces.includes(matriz[i][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces[letterToName[matriz[i][j]]] * weightPieces.eating - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: valuePieces[letterToName[matriz[i][j]]] * weightPieces.eating - moveBlack( movePiece( matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -518,7 +519,7 @@ function moveWhite(matriz, depth) {
                 if((row - i > 1) && (col - j > 1)){
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Bishop - moveBlack( movePiece(matriz, row, col, i+1, j+1), depth-1).value,
+                            value: valuePieces.Bishop - moveBlack( movePiece( matriz, row, col, i, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i+1,
@@ -538,7 +539,7 @@ function moveWhite(matriz, depth) {
             if(blackPieces.includes(matriz[i][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating)  - moveBlack( movePiece( matriz, row, col, i+1, col), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -554,7 +555,7 @@ function moveWhite(matriz, depth) {
                 if  (row - i > 1 &&  (j - col > 1)){
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Bishop - moveBlack( movePiece(matriz, row, col, i+1, j-1), depth-1).value,
+                            value: valuePieces.Bishop - moveBlack( movePiece( matriz, row, col, i+1, col), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i+1,
@@ -564,7 +565,6 @@ function moveWhite(matriz, depth) {
                 }
                 break loop;
             }
-            
         }
 
         //* busca la primera pieza en diagonal inferior izquierda"
@@ -591,7 +591,7 @@ function moveWhite(matriz, depth) {
                 if ((col - j > 1) && (i - row > 1)){
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Bishop - moveBlack( movePiece(matriz, row, col, i-1, j+1), depth-1).value,
+                            value: valuePieces.Bishop  - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i-1,
@@ -627,7 +627,7 @@ function moveWhite(matriz, depth) {
                 if((j - col > 1) && (i - row > 1)){
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Bishop - moveBlack( movePiece(matriz, row, col, i-1, j-1), depth-1).value,
+                            value: valuePieces.Bishop - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i-1,
@@ -667,7 +667,7 @@ function moveWhite(matriz, depth) {
                 if(row - i > 1){
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, i+1, col), depth-1).value,
+                            value: valuePieces.Queen - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: (i+1),
@@ -696,14 +696,13 @@ function moveWhite(matriz, depth) {
                 )
                 break loop;
             }
-
             //si encuentra una blanca con un espacio vacio adelante, 
             //se mueve a ese espacio
             else if(whitePieces.includes(matriz[i][col])){
                 if ((i - row > 1)){
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, i-1, col), depth-1).value,
+                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, i, col), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: (i-1),
@@ -733,20 +732,20 @@ function moveWhite(matriz, depth) {
                 break loop;
             }
 
-            //si encuentra una blanca con un espacio vacio a la derecha, 
+            //si encuentra una blanca con un espacio vacio a la izquierda, 
             //se mueve a ese espacio
             else if(whitePieces.includes(matriz[row][j]) ){
-                if(col - j > 1){
+                if (col - j > 1) {
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, row, j+1), depth-1).value,
+                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: row,
-                            to_col: (j+1)
+                            to_col: (j-1)
                         }
                     )
-                }
+                }                
                 break loop;
             }
         }
@@ -775,7 +774,7 @@ function moveWhite(matriz, depth) {
                 if (col - j > 1) {
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, row, j-1), depth-1).value,
+                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: row,
@@ -811,7 +810,7 @@ function moveWhite(matriz, depth) {
                 if((row - i > 1) && (col - j > 1)){
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, i+1, j+1), depth-1).value,
+                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, i, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i+1,
@@ -847,7 +846,7 @@ function moveWhite(matriz, depth) {
                 if  (row - i > 1 &&  (j - col > 1)){
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Queen - moveBlack( movePiece(matriz, row, col, i+1, j-1), depth-1).value,
+                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, i+1, col), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i+1,
@@ -883,7 +882,7 @@ function moveWhite(matriz, depth) {
                 if ((col - j > 1) && (i - row > 1)){
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Queen - moveBlack( movePiece(matriz, row, col, i-1, j+1), depth-1).value,
+                            value: valuePieces.Queen  - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i-1,
@@ -919,7 +918,7 @@ function moveWhite(matriz, depth) {
                 if((j - col > 1) && (i - row > 1)){
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.Queen - moveBlack( movePiece(matriz, row, col, i-1, j-1), depth-1).value,
+                            value: valuePieces.Queen - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i-1,
@@ -1006,14 +1005,12 @@ function moveWhite(matriz, depth) {
             )
         }
     }
-
 }
 
 function moveBlack(matriz, depth) {
 
     //si depth es 0, es porque se llego al fin del bucle 
     if(depth == 0){
-        // console.log("depthBlack: ", depth)
         return {value: 0}
     }
 
@@ -1070,7 +1067,10 @@ function moveBlack(matriz, depth) {
     let index = 0;
     index = possibleMovementsBlack.findIndex( s => s.value == max);
 
-    // console.log(possibleMovementsBlack[index])
+    if(possibleMovementsBlack[index].desc != undefined){
+        console.log(possibleMovementsBlack[index].desc)
+    }
+
 
     let result = {
         value: possibleMovementsBlack[index].value,
@@ -1350,7 +1350,7 @@ function moveBlack(matriz, depth) {
     }
     
     function blackRookMoves(matriz, row, col){
-    
+        loop:
         //* busca la primera pieza que encuentra adelante
         for (let i = row + 1 ; i < 16; i++){
     
@@ -1358,37 +1358,35 @@ function moveBlack(matriz, depth) {
             if(whitePieces.includes(matriz[i][col])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, i, col), depth-1).value),
+                        value: (((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) 
+                            - moveWhite(movePiece(matriz, row, col, i, col), depth-1).value),
                         from_row: row,
                         from_col: col,
                         to_row: i,
                         to_col: col
                     }
                 )
-    
                 break;
             }
-    
+
             //si encuentra una negra con un espacio vacio atras, 
             //se mueve a ese espacio
             else if(blackPieces.includes(matriz[i][col])){
                 if( i - row > 1){
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Rook - moveWhite( movePiece(matriz, row, col, i-1, col), depth-1).value),
+                            value: valuePieces.Rook - moveWhite(movePiece(matriz, row, col, i, col), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: (i-1),
                             to_col: col
                         }
                     )
-    
                 } 
-    
                 break;
             }
         } 
-    
+        loop:
         //* busca la primera pieza que encuentra atras
         for (let i = row-1; i > 0; i--){
     
@@ -1396,7 +1394,7 @@ function moveBlack(matriz, depth) {
             if(whitePieces.includes(matriz[i][col])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, i, col), depth-1).value),
+                        value: (((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating)  - moveWhite(movePiece(matriz, row, col, i, col),depth-1).value),
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1405,14 +1403,14 @@ function moveBlack(matriz, depth) {
                 )
                 break;
             }
-    
+            
             //si encuentra una negra con un espacio vacio adelante, 
             //se mueve a ese espacio
             else if(blackPieces.includes(matriz[i][col])){
                 if ((row - i > 1)){
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Rook - moveWhite( movePiece(matriz, row, col, i+1, col), depth-1).value),
+                            value: valuePieces.Rook - moveWhite(movePiece(matriz, row, col, i, col),depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: (i+1),
@@ -1421,10 +1419,11 @@ function moveBlack(matriz, depth) {
                     )    
                 }
                 break;
-    
+
             }
+
         } 
-    
+        loop:
         //* busca la primera pieza a la derecha
         for (let j = col-1; j > 0; j--){
     
@@ -1432,7 +1431,7 @@ function moveBlack(matriz, depth) {
             if(whitePieces.includes(matriz[row][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row, j), depth-1).value),
+                        value: (((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value),
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -1441,14 +1440,14 @@ function moveBlack(matriz, depth) {
                 )
                 break;
             }
-    
+
             //si encuentra una negra con un espacio vacio a la derecha, 
             //se mueve a ese espacio
             else if(blackPieces.includes(matriz[row][j]) ){
                 if(col - j > 1){
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Rook - moveWhite( movePiece(matriz, row, col, row, j+1), depth-1).value),
+                            value: valuePieces.Rook - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: row,
@@ -1458,9 +1457,9 @@ function moveBlack(matriz, depth) {
                 }
                 break;
             }
-    
+
         }
-    
+        loop:
         //* busca la primera pieza a la izquierda
         for (let j = col+1; j < 16; j++){
     
@@ -1468,7 +1467,7 @@ function moveBlack(matriz, depth) {
             if(whitePieces.includes(matriz[row][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row, j), depth-1).value),
+                        value: (((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value),
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -1485,7 +1484,7 @@ function moveBlack(matriz, depth) {
                 if (col - j > 1) {
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Rook - moveWhite( movePiece(matriz, row, col, row, j-1)).value),
+                            value: valuePieces.Rook - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: row,
@@ -1495,20 +1494,22 @@ function moveBlack(matriz, depth) {
                 }                
                 break;
             }
+    
         }
+        
     }
     
     function blackBishopMoves(matriz, row, col){
-    
+            
         //* busca la primera pieza en diagonal inferior derecha
         loop:
         for (let i = row-1, j = col -1 ; i > 0 && j > 0; i--, j--){
-    
+       
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (valuePieces[letterToName[matriz[i][j]]] * weightPieces.eating - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value),
+                        value: (valuePieces[letterToName[matriz[i][j]]] * weightPieces.eating - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value),
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1524,7 +1525,7 @@ function moveBlack(matriz, depth) {
                 if(Math.abs(row - i) > 1 && (Math.abs(col - j) > 1)){
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Bishop - moveWhite( movePiece(matriz, row, col, i+1, j+1), depth-1).value),
+                            value: valuePieces.Bishop - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i+1,
@@ -1534,6 +1535,7 @@ function moveBlack(matriz, depth) {
                 }
                 break loop;
             }
+            
         }
     
         //* busca la primera pieza en diagonal inferior izquierda
@@ -1544,7 +1546,7 @@ function moveBlack(matriz, depth) {
             if(whitePieces.includes(matriz[i][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value),
+                        value: (((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value),
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1560,7 +1562,7 @@ function moveBlack(matriz, depth) {
                 if  (Math.abs(row - i) > 1 && (Math.abs(j - col) > 1)){
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Bishop - moveWhite( movePiece(matriz, row, col, i+1, j-1), depth-1).value),
+                            value: valuePieces.Bishop - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i+1,
@@ -1570,6 +1572,7 @@ function moveBlack(matriz, depth) {
                 }
                 break loop;
             }
+            
         }
     
         //* busca la primera pieza en diagonal superior derecha"
@@ -1580,7 +1583,7 @@ function moveBlack(matriz, depth) {
             if(whitePieces.includes(matriz[i][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value),
+                        value: (((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value),
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1596,7 +1599,7 @@ function moveBlack(matriz, depth) {
                 if (Math.abs(col - j) > 1 && Math.abs(i - row) > 1){
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Bishop - moveWhite(movePiece(matriz, row, col, i-1, j+1), depth-1).value),
+                            value: valuePieces.Bishop - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i-1,
@@ -1623,6 +1626,7 @@ function moveBlack(matriz, depth) {
                         to_col: j
                     }
                 )
+    
                 break loop;
             }
     
@@ -1632,7 +1636,7 @@ function moveBlack(matriz, depth) {
                 if( Math.abs(j - col) > 1 && Math.abs(i - row ) > 1){
                     possibleMovementsBlack.push(
                         {
-                            value:( valuePieces.Bishop - moveWhite( movePiece(matriz, row, col, i-1, j-1), depth-1).value),
+                            value: valuePieces.Bishop - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i-1,
@@ -1646,7 +1650,7 @@ function moveBlack(matriz, depth) {
     }
     
     function blackQueenMoves(matriz, row, col){
-    
+        loop:
         //* busca la primera pieza que encuentra adelante
         for (let i = row + 1 ; i < 16; i++){
     
@@ -1664,14 +1668,14 @@ function moveBlack(matriz, depth) {
                 )
                 break;
             }
-    
+
             //si encuentra una negra con un espacio vacio atras, 
             //se mueve a ese espacio
             else if(blackPieces.includes(matriz[i][col])){
                 if( i - row > 1){
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i-1, col), depth-1).value),
+                            value: valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i, col), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: (i-1),
@@ -1682,7 +1686,7 @@ function moveBlack(matriz, depth) {
                 break;
             }
         } 
-    
+        loop:
         //* busca la primera pieza que encuentra atras
         for (let i = row-1; i > 0; i--){
     
@@ -1699,14 +1703,14 @@ function moveBlack(matriz, depth) {
                 )
                 break;
             }
-    
+            
             //si encuentra una negra con un espacio vacio adelante, 
             //se mueve a ese espacio
             else if(blackPieces.includes(matriz[i][col])){
                 if ((row - i > 1)){
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i+1, col),depth-1).value),
+                            value: valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i, col),depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: (i+1),
@@ -1715,10 +1719,11 @@ function moveBlack(matriz, depth) {
                     )    
                 }
                 break;
-    
+
             }
+
         } 
-    
+        loop:
         //* busca la primera pieza a la derecha
         for (let j = col-1; j > 0; j--){
     
@@ -1735,14 +1740,14 @@ function moveBlack(matriz, depth) {
                 )
                 break;
             }
-    
+
             //si encuentra una negra con un espacio vacio a la derecha, 
             //se mueve a ese espacio
             else if(blackPieces.includes(matriz[row][j]) ){
                 if(col - j > 1){
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Queen - moveWhite(movePiece(matriz, row, col, row, j+1), depth-1).value),
+                            value: valuePieces.Queen - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: row,
@@ -1752,9 +1757,9 @@ function moveBlack(matriz, depth) {
                 }
                 break;
             }
-    
+
         }
-    
+        loop:
         //* busca la primera pieza a la izquierda
         for (let j = col+1; j < 16; j++){
     
@@ -1779,7 +1784,7 @@ function moveBlack(matriz, depth) {
                 if (col - j > 1) {
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Queen - moveWhite(movePiece(matriz, row, col, row, j-1), depth-1).value),
+                            value: valuePieces.Queen - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: row,
@@ -1816,7 +1821,7 @@ function moveBlack(matriz, depth) {
                 if(Math.abs(row - i) > 1 && (Math.abs(col - j) > 1)){
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i+1, j+1), depth-1).value),
+                            value: valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i+1,
@@ -1853,7 +1858,7 @@ function moveBlack(matriz, depth) {
                 if  (Math.abs(row - i) > 1 && (Math.abs(j - col) > 1)){
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i+1, j-1), depth-1).value),
+                            value: valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i+1,
@@ -1890,7 +1895,7 @@ function moveBlack(matriz, depth) {
                 if (Math.abs(col - j) > 1 && Math.abs(i - row) > 1){
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i-1, j+1), depth-1).value),
+                            value: valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i-1,
@@ -1927,7 +1932,7 @@ function moveBlack(matriz, depth) {
                 if( Math.abs(j - col) > 1 && Math.abs(i - row ) > 1){
                     possibleMovementsBlack.push(
                         {
-                            value: (valuePieces.Queen - moveWhite( movePiece(matriz, row, col, i-1, j-1), depth-1).value),
+                            value: valuePieces.Queen - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
                             from_row: row,
                             from_col: col,
                             to_row: i-1,
