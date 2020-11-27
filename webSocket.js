@@ -49,6 +49,8 @@ ws.on('connect', function (connection) {
 
                 //manda la respuesta al desafio
                 connection.sendUTF(Challenged.challenged(data.data));
+                
+
                 break;
 
             case 'your_turn':
