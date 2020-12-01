@@ -10,6 +10,7 @@ var authtoken = fs.readFileSync('authtoken.txt').toString();
 
 //genera el cliente websocket
 let ws = new client();
+let count = 0;
 
 //realiza la conexion
 function connect(){
@@ -39,7 +40,16 @@ ws.on('connect', function (connection) {
         switch (data.event){
 
             case 'update_user_list':
-                console.log(data.data.users_list);
+
+                //viene demasiado seguido, no lo quiero ver tanto
+                if(count == 0){
+                    console.log(data.data.users_list);
+                    count = 3;
+                }
+                else{
+                    count--;
+                }
+
                 break;
 
             case 'ask_challenge':
@@ -59,11 +69,10 @@ ws.on('connect', function (connection) {
 
             case'gameover':
                 //muestro el resultado
-                // console.log(makeMatriz(data.data.board))
-
-                console.log("\n End of Match")
+                console.log("\nEnd of Match - Winner: ", data.data.white_score > data.data.black_score ? data.data.white_username : data.data.black_username) 
                 console.log("White user: ", data.data.white_username, ", with score: ", data.data.white_score);
                 console.log("Black user: ", data.data.black_username, ", with score: ", data.data.black_score, '\n');
+                
                 //muestro el tablero
                 // console.table(makeMatriz(data.data.board))
                 break;
