@@ -3,7 +3,8 @@
 
 ## Status: Beta
 This bot is currently under development and is not 100% stable (and probably will never be).
-To start the bout simply use:
+
+To start the bot simply use:
 ```
 npm start
 ```
