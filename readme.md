@@ -29,6 +29,7 @@ Each piece has an assigned value:
   * Bishop: 40.
   * Rook: 60.
   * King: 100.
+
 When you move certain piece, you score the piece value, and when you capture a piece, you score 10 times the value of the captured piece.
 
 ### How to win:
