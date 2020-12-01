@@ -46,30 +46,29 @@ The bot interacts with a server, responsible for controlling the game.
 When its the bots turn to play, it sends a message like this:
 ```
 {
-"event":"your_turn",
-"data":{
-"board_id":"2d348323-2e79-4961-ac36-1b000e8c42a5",
-"turn_token":"e40573bb-138f-4171-a200-66258f546755",
-"username":"username",
-"actual_turn":"white",
-"board":"rrhhbbqqkkbbhhrrrrhhbbqqkkbbhhrrpppppppppppppppppppppppppppppppp                                                                                                                        P       PPPPPPPP PPPPPPPPPPPPPPPPPPPPPPPRRHHBBQQKKBBHHRRRRHHBBQQKKBBHHRR",
-"move_left":19, 
-"opponent_username”: “maria”
-}
+    "event":"your_turn",
+    "data":{
+           "board_id":"2d348323-2e79-4961-ac36-1b000e8c42a5",
+           "turn_token":"e40573bb-138f-4171-a200-66258f546755",
+           "username":"username",
+           "actual_turn":"white",
+           "board":"rrhhbbqqkkbbhhrrrrhhbbqqkkbbhhrrpppppppppppppppppppppppppppppppp                                                                                                                        P       PPPPPPPP PPPPPPPPPPPPPPPPPPPPPPPRRHHBBQQKKBBHHRRRRHHBBQQKKBBHHRR",
+           "move_left":19, 
+           "opponent_username”: “maria”
+           }
 }
 ```
 After, it decides what move to make, and send a message like: 
 ```
 {
-“action”: 'move', 
-“data”: {
-        “board_id”: ”2d348323-2e79-4961-ac36-1b000e8c42a5”,
-        “turn_token: ”e40573bb-138f-4171-a200-66258f546755”,
-        “from_row”: 1,
-        “from_col”: 1,
-        “to_row”: 3,
-        “to_col”: 1
-    }
+    “action”: 'move', 
+    “data”: {
+            “board_id”: ”2d348323-2e79-4961-ac36-1b000e8c42a5”,
+            “turn_token: ”e40573bb-138f-4171-a200-66258f546755”,
+            “from_row”: 1,
+            “from_col”: 1,
+            “to_row”: 3,
+            “to_col”: 1
+        }
 }
-
 ```
