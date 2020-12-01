@@ -34,4 +34,4 @@ Each pieces has it own value:
   * Rook: 60
   * King: 100
 
-* When you capture a piece, you score 10 times the value of the captured piece.
+When you capture a piece, you score 10 times the value of the captured piece.
