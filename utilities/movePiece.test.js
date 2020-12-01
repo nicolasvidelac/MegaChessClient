@@ -548,4 +548,3 @@ test('should throw error', () => {
     movePiece(matriz, 1,15,2,8)
   }).toThrowError('matriz de formato incorrecto');
 })
-

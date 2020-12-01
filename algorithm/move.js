@@ -5,7 +5,9 @@ const { valuePieces} = require("../enums/valuePieces");
 const { weightPieces} = require("../enums/weightPieces");
 const { movePiece } = require("../utilities/movePiece");
 
-function moveWhite(matriz, depth) {
+let deepness = 3;
+
+function moveWhite(matriz, depth = deepness) {
 
     //si depth es 0, es porque se llego al fin del bucle 
     if(depth == 0){
@@ -967,7 +969,7 @@ function moveWhite(matriz, depth) {
         if((blackPieces.includes(matriz[row-1][col+1]))){
             possibleMovementsWhite.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row-1][col+1]]]) * weightPieces.eating) - moveBlack(movePiece(matriz, row, col, row-1, col+1), depth-1).value,
+                    value: ((valuePieces[letterToName[matriz[row-1][col+1]]]) * weightPieces.eating) + weightPieces.movingFowardPawn - ((row-8-1) * 10) - moveBlack(movePiece(matriz, row, col, row-1, col+1), depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row-1),
@@ -981,7 +983,7 @@ function moveWhite(matriz, depth) {
 
             possibleMovementsWhite.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row-1][col-1]]]) * weightPieces.eating) - moveBlack(movePiece(matriz, row, col, row-1, col-1), depth-1).value,
+                    value: ((valuePieces[letterToName[matriz[row-1][col-1]]]) * weightPieces.eating) + weightPieces.movingFowardPawn - ((row-8-1) * 10) - moveBlack(movePiece(matriz, row, col, row-1, col-1), depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row-1),
@@ -1007,7 +1009,7 @@ function moveWhite(matriz, depth) {
     }
 }
 
-function moveBlack(matriz, depth) {
+function moveBlack(matriz, depth = deepness) {
 
     //si depth es 0, es porque se llego al fin del bucle 
     if(depth == 0){
@@ -1067,9 +1069,9 @@ function moveBlack(matriz, depth) {
     let index = 0;
     index = possibleMovementsBlack.findIndex( s => s.value == max);
 
-    if(possibleMovementsBlack[index].desc != undefined){
-        console.log(possibleMovementsBlack[index].desc)
-    }
+    // if(possibleMovementsBlack[index].desc != undefined){
+    //     console.log(possibleMovementsBlack[index].desc)
+    // }
 
 
     let result = {
@@ -1978,7 +1980,7 @@ function moveBlack(matriz, depth) {
             let matrizBlanca = movePiece(matriz, row, col, row+1, col+1)
             possibleMovementsBlack.push(
                 {
-                value:(((valuePieces[letterToName[matriz[row+1][col+1]]]) * weightPieces.eating) - moveWhite( matrizBlanca, depth-1).value),
+                value:(((valuePieces[letterToName[matriz[row+1][col+1]]]) * weightPieces.eating) +  weightPieces.movingFowardPawn - ((7-row-1) * 10) - moveWhite( matrizBlanca, depth-1).value),
                 from_row: row,
                 from_col: col,
                 to_row: (row+1),
@@ -1992,7 +1994,7 @@ function moveBlack(matriz, depth) {
             let matrizBlanca = movePiece(matriz, row, col, row+1, col-1)
             possibleMovementsBlack.push(
                 {
-                    value: (((valuePieces[letterToName[matriz[row+1][col-1]]]) * weightPieces.eating) - moveWhite( matrizBlanca, depth-1).value),
+                    value: (((valuePieces[letterToName[matriz[row+1][col-1]]]) * weightPieces.eating) +  weightPieces.movingFowardPawn - ((7-row-1) * 10) - moveWhite( matrizBlanca, depth-1).value),
                     from_row: row,
                     from_col: col,
                     to_row: (row+1),

@@ -1,4 +1,4 @@
-function makeMatriz(board){
+exports.makeMatriz = (board) => {
 
     let index = 0;
     let matriz = [];
@@ -26,8 +26,4 @@ function makeMatriz(board){
     }
     
     return matriz;
-}
-
-module.exports = {
-    makeMatriz : makeMatriz
 }

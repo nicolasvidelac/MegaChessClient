@@ -1,8 +1,3 @@
-const whitePieces = 'PRBHQK';
+exports.whitePieces = 'PRBHQK';
 
-const blackPieces = 'prbhqk';
-
-module.exports = {
-    blackPieces : blackPieces,
-    whitePieces : whitePieces
-}
+exports.blackPieces = 'prbhqk';

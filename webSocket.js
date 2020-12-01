@@ -14,7 +14,7 @@ let ws = new client();
 //realiza la conexion
 function connect(){
     ws.connect(`ws://megachess.herokuapp.com/service?authtoken=${authtoken}`)
-    console.log("Connection opened")
+    // console.log("Connection opened")
 }
 
 //ejecuto connect()
@@ -25,7 +25,7 @@ ws.on('connect', function (connection) {
 
     //accion cuando se cierra ws
     connection.on('close', () => {
-        console.log("Connection closed");
+        // console.log("Connection closed");
         connect();
     })
 
@@ -48,20 +48,24 @@ ws.on('connect', function (connection) {
                 console.log("challenged by ", data.data.username)
 
                 //manda la respuesta al desafio
-                connection.sendUTF(Challenged.challenged(data.data));
+                connection.sendUTF(Challenged.challenged(data.data.board_id));
                 break;
 
             case 'your_turn':
                 //envio el movimiento que realizo
+                // console.table(makeMatriz(data.data.board))
                 connection.sendUTF(my_turn(data.data));
                 break;
 
             case'gameover':
                 //muestro el resultado
                 // console.log(makeMatriz(data.data.board))
-                console.log(data.data);
+
+                console.log("\n End of Match")
+                console.log("White user: ", data.data.white_username, ", with score: ", data.data.white_score);
+                console.log("Black user: ", data.data.black_username, ", with score: ", data.data.black_score, '\n');
                 //muestro el tablero
-                console.table(makeMatriz(data.data.board))
+                // console.table(makeMatriz(data.data.board))
                 break;
 
             default:

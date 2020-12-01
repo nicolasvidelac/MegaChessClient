@@ -1,4 +1,4 @@
-function movePiece(matriz, from_row, from_col, to_row, to_col){
+exports.movePiece = (matriz, from_row, from_col, to_row, to_col) => {
    
     let matrizNueva = new Array();
 
@@ -18,8 +18,4 @@ function movePiece(matriz, from_row, from_col, to_row, to_col){
     }
      
     return matrizNueva;
-}
-
-module.exports = {
-    movePiece : movePiece
 }

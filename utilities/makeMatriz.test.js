@@ -1,7 +1,7 @@
 const { makeMatriz } = require("./makeMatriz")
 
 
-test('should output an array of arrays from a string', () => {
+test('should output array', () => {
 
   let board = ' rh bb  kkbbhhrr        qkbbhhrr         ppppppp  h                                                             R                                                                                   Q               PPPP   PPPPP  HH B    BBHHRR   BBB   KBBHHRR';
   let matriz = makeMatriz(board);
