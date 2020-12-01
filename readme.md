@@ -20,18 +20,18 @@ npm start
 This proyect consist on a bot capable of playing a very unconventional chess, with a 16 x 16 board, and 64 pieces per color.
 
 ### How to win:
-There is no check or checkmate.
-After 200 moves, the game ends.
-The game is over when one color capture all rival pieces or when the amount of movements reaches 0.
-Win who get more points.
+* There is no check or checkmate.
+* After 200 moves, the game ends.
+* The game is over when one color capture all rival pieces or when the amount of movements reaches 0.
+* Win who get more points.
 
 ### Rules:
 Each pieces has it own value:
-  Queen: 5
-  Pawn: 10
-  Horse: 30
-  Bishop: 40
-  Rook: 60
-  King: 100
+  * Queen: 5
+  * Pawn: 10
+  * Horse: 30
+  * Bishop: 40
+  * Rook: 60
+  * King: 100
 
-When you capture a piece, you score 10 times the value of the captured piece.
+* When you capture a piece, you score 10 times the value of the captured piece.
