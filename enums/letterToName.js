@@ -1,4 +1,4 @@
-const letterToName = {
+exports.letterToName = {
     p: "Pawn",
     h: "Horse",
     r: "Rook",
@@ -11,8 +11,4 @@ const letterToName = {
     B: "Bishop",
     Q: "Queen",
     K: "King"
-}
-
-module.exports = {
-    letterToName : letterToName
 }

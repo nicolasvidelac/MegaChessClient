@@ -1,16 +1,19 @@
 const { moveBlack, moveWhite } = require('../algorithm/move');
+const { myUsername } = require('../enums/myUsername');
+const { makeMatriz } = require('../utilities/makeMatriz');
 
-const makeMatriz = require('../extras/makeMatriz').makeMatriz;
-
-function my_turn(data){
+exports.my_turn = (data) => {
     let result;
-    let depth = 3;
+
+    if (data.username != myUsername){
+        throw new Error('different username')
+    }
 
     switch (data.actual_turn) {
         
         case 'black':
             console.log("turno black")
-            result = moveBlack(makeMatriz(data.board), depth)
+            result = moveBlack(makeMatriz(data.board))
         
             return JSON.stringify({
                 action: 'move',
@@ -26,7 +29,7 @@ function my_turn(data){
         
         case 'white':
             console.log("turno white")
-            result = moveWhite(makeMatriz(data.board), depth)
+            result = moveWhite(makeMatriz(data.board))
 
             return JSON.stringify({
                 action: 'move',
@@ -41,8 +44,6 @@ function my_turn(data){
             })
 
         default:
-            break;
+            throw new Error('actual_turn invalid')
     }
 }
-
-module.exports.my_turn = my_turn;

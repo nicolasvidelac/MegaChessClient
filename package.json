@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node webSocket.js"
+    "start": "node webSocket.js",
+    "test": "jest",
+    "test:coveralls" : "jest --coverage && coveralls < coverage/lcov.info"
   },
   "keywords": [],
   "author": "",
@@ -12,5 +14,10 @@
   "dependencies": {
     "websocket": "^1.0.32",
     "ws": "^7.4.0"
+  },
+  "devDependencies": {
+    "coveralls": "^3.1.0",
+    "jest": "^26.6.3",
+    "jest-each": "^26.6.2"
   }
 }
