@@ -43,6 +43,8 @@ When you move certain piece, you score the piece value, and when you capture a p
 .
 .
 .
+<br>
+</br>
 The bot interacts with a server, responsible for controlling the game.
 
 When its the bots turn to play, it sends a message like this:
