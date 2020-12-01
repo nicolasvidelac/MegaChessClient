@@ -2,7 +2,7 @@
 const Challenged = require('./responses/challenged');
 const fs = require('fs');
 const { my_turn } = require('./responses/my_turn');
-const { makeMatriz} = require('./extras/makeMatriz');
+const { makeMatriz} = require('./utilities/makeMatriz');
 const { client } = require('websocket')
 
 //lee mi authtoken de un archivo
@@ -23,7 +23,7 @@ connect();
 //activa cuando se conecta
 ws.on('connect', function (connection) {
 
-    //accion cuando se cierra el ws
+    //accion cuando se cierra ws
     connection.on('close', () => {
         console.log("Connection closed");
         connect();
@@ -49,8 +49,6 @@ ws.on('connect', function (connection) {
 
                 //manda la respuesta al desafio
                 connection.sendUTF(Challenged.challenged(data.data));
-                
-
                 break;
 
             case 'your_turn':
@@ -60,6 +58,7 @@ ws.on('connect', function (connection) {
 
             case'gameover':
                 //muestro el resultado
+                // console.log(makeMatriz(data.data.board))
                 console.log(data.data);
                 //muestro el tablero
                 console.table(makeMatriz(data.data.board))
@@ -67,7 +66,7 @@ ws.on('connect', function (connection) {
 
             default:
                 console.log('caso no agarrado')
-                // console.log(data);
+                console.log(data);
                 break;
         }
     })

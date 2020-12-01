@@ -95,6 +95,21 @@ const whitePlaceWeight = {
     ]
 }
 
+const blackPlaceWeight = {
+    horseEval : whitePlaceWeight.horseEval,
+    bishopEval : reverseArray(whitePlaceWeight.bishopEval),
+    kingEval : reverseArray(whitePlaceWeight.kingEval),
+    queenEval : whitePlaceWeight.queenEval,
+    kingEval : reverseArray(whitePlaceWeight.kingEval),
+    rookEval : reverseArray(whitePlaceWeight.rookEval)
+}
+
+
+function reverseArray (array) {
+    return array.slice().reverse();
+};
+
 module.exports = {
-    whitePlaceWeight : whitePlaceWeight
+    whitePlaceWeight : whitePlaceWeight,
+    blackPlaceWeight : blackPlaceWeight
 }

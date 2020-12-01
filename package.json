@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node webSocket.js"
+    "start": "node webSocket.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -12,5 +13,8 @@
   "dependencies": {
     "websocket": "^1.0.32",
     "ws": "^7.4.0"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
   }
 }

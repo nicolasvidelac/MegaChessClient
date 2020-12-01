@@ -1,6 +1,6 @@
 const { moveBlack, moveWhite } = require('../algorithm/move');
 
-const makeMatriz = require('../extras/makeMatriz').makeMatriz;
+const makeMatriz = require('../utilities/makeMatriz').makeMatriz;
 
 function my_turn(data){
     let result;
