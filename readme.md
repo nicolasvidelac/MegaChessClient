@@ -34,7 +34,7 @@ When you capture a piece, you score 10 times the value of the captured piece.
 ### How to win:
 * There is no check or checkmate.
 * After 200 moves, the game ends.
-* The game is over when one color capture all rival pieces or when the amount of movements reaches 0.
-* Win who get more points.
+* The game is over when one color capture all rival pieces.
+* Wins who get the most points.
 
 
