@@ -38,4 +38,4 @@ When you move certain piece, you score the piece value, and when you capture a p
 * The game is over when one player captures all rival pieces.
 * Wins who get the most points.
 
-
+https://github.com/nicolasvidelac/MegaChessClient/issues/4#issue-754810481
