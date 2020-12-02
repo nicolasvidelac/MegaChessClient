@@ -2,7 +2,6 @@
 const Challenged = require('./responses/challenged');
 const fs = require('fs');
 const { my_turn } = require('./responses/my_turn');
-const { makeMatriz} = require('./utilities/makeMatriz');
 const { client } = require('websocket')
 
 //lee mi authtoken de un archivo
@@ -15,7 +14,6 @@ let count = 0;
 //realiza la conexion
 function connect(){
     ws.connect(`ws://megachess.herokuapp.com/service?authtoken=${authtoken}`)
-    // console.log("Connection opened")
 }
 
 //ejecuto connect()
@@ -26,7 +24,6 @@ ws.on('connect', function (connection) {
 
     //accion cuando se cierra ws
     connection.on('close', () => {
-        // console.log("Connection closed");
         connect();
     })
 
@@ -40,14 +37,11 @@ ws.on('connect', function (connection) {
         switch (data.event){
 
             case 'update_user_list':
-
-                //viene demasiado seguido, no lo quiero ver tanto
-                if(count == 0){
+                if (count == 0){
                     console.log(data.data.users_list);
-                    count = 3;
-                }
-                else{
-                    count--;
+                    count = 3
+                } else {
+                    count --;
                 }
 
                 break;
@@ -62,26 +56,27 @@ ws.on('connect', function (connection) {
                 break;
 
             case 'your_turn':
+                
                 //envio el movimiento que realizo
-                // console.table(makeMatriz(data.data.board))
                 connection.sendUTF(my_turn(data.data));
                 break;
 
             case'gameover':
                 //muestro el resultado
-                console.log("\nEnd of Match - Winner:", Number(data.data.white_score) > Number(data.data.black_score) ? 
-                    `${data.data.white_username} with whites` : `${data.data.black_username} with blacks`) 
-                    
-                console.log("White user: ", data.data.white_username, ", with score: ", data.data.white_score);
-                console.log("Black user: ", data.data.black_username, ", with score: ", data.data.black_score, '\n');
-                
-                //muestro el tablero
-                // console.table(makeMatriz(data.data.board))
+                console.log
+                (
+                    "\nEnd of Match - Winner:", 
+                    Number(data.data.white_score) > Number(data.data.black_score) ? 
+                        `${data.data.white_username} with whites\n` : `${data.data.black_username} with blacks\n`,
+                        
+                    "White user: ", data.data.white_username, ", with score: ", data.data.white_score,
+                    "\n Black user: ", data.data.black_username, ", with score: ", data.data.black_score, '\n'            
+                )
                 break;
 
             default:
-                console.log('caso no agarrado')
-                console.log(data);
+                console.log("response error, timeout exception")
+                // console.log(data);
                 break;
         }
     })
