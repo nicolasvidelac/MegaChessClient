@@ -5,13 +5,12 @@ const { valuePieces} = require("../enums/valuePieces");
 const { weightPieces} = require("../enums/weightPieces");
 const { movePiece } = require("../utilities/movePiece");
 
-let deepness = 3;
+let deepness = 2;
 
 function moveWhite(matriz, depth = deepness) {
 
     //si depth es 0, es porque se llego al fin del bucle 
     if(depth == 0){
-        // console.log("depthWhite: ", depth)
         return { value: 0 }
     }
     
@@ -20,8 +19,8 @@ function moveWhite(matriz, depth = deepness) {
     
     //itero sobre toda la matriz buscando mis piezas 
     //y ejecuto la funcion correspondiente cuando encuentro una pieza
-     for(let col = 0; col < 16; col++){
-        for(let row = 15; row > 0; row--){
+     for( let col = 0; col < 16; col++ ){
+        for( let row = 15; row > 0; row-- ){
 
             switch (matriz[row][col]){
 
@@ -63,9 +62,6 @@ function moveWhite(matriz, depth = deepness) {
             max = pm.value
         }
     })
-
-    // console.log(possibleMovementsWhite)
-
     
     // guardo el indice de ese maximo
     let index = 0;
@@ -81,229 +77,68 @@ function moveWhite(matriz, depth = deepness) {
 
     // devuelvo los datos desde y hacia del movimiento de mayor valor
     return result;
-
     
     function WhiteHorseMoves(matriz, row, col){
-
-        if (row < 14 && col < 15){
-            //come en ese lugar
-            if (blackPieces.includes(matriz[row+2][col+1])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row+2][col+1]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row+2, col+1), depth-1).value + whitePlaceWeight.horseEval[row+2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col+1
-                    }
-                )
-            }
-
-            //se mueve a ese lugar
-            else if(matriz[row+2][col+1] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row+2, col+1), depth-1).value + whitePlaceWeight.horseEval[row+2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col+1
-                    }
-                )
-            }
-        }
-
-        if (row < 15 && col < 14){
-            //come en ese lugar
-            if (blackPieces.includes(matriz[row+1][col+2])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row+1][col+2]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row+1, col+2), depth-1).value + whitePlaceWeight.horseEval[row+1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col+2
-                    }
-                )
-            }
-
-            //se mueve a ese lugar
-            else if(matriz[row+1][col+2] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row+1, col+2), depth-1).value + whitePlaceWeight.horseEval[row+1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col+2
-                    }
-                )
-            }
-        }
-
-        if (row > 1 && col < 15){
-            //come en ese lugar
-            if (blackPieces.includes(matriz[row-2][col+1])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row-2][col+1]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row-2, col+1), depth-1).value + whitePlaceWeight.horseEval[row-2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col+1
-                    }
-                )
-            }
-
-            //se mueve a ese lugar
-            else if(matriz[row-2][col+1] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row-2, col+1), depth-1).value + whitePlaceWeight.horseEval[row-2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col+1
-                    }
-                )
-            }
-        }
-
-        if (row > 0 && col < 14){
-            //come en ese lugar
-            if (blackPieces.includes(matriz[row-1][col+2])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row-1][col+2]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row-1, col+2), depth-1).value + whitePlaceWeight.horseEval[row-1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col+2
-                    }
-                )
-            }
-
-            //se mueve a ese lugar
-            else if(matriz[row-1][col+2] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row-1, col+2), depth-1).value + whitePlaceWeight.horseEval[row-1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col+2
-                    }
-                )
-            }
-        }
-
-        if (row > 0 && col > 1){
-            //come en ese lugar
-            if (blackPieces.includes(matriz[row-1][col-2])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row-1][col-2]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row-1, col-2), depth-1).value + whitePlaceWeight.horseEval[row-1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col-2
-                    }
-                )
-            }
-
-            //se mueve a ese lugar
-            else if(matriz[row-1][col-2] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row-1, col-2), depth-1).value + whitePlaceWeight.horseEval[row-1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col-2
-                    }
-                )
-            }
-        }
-
-        if (row > 1 && col > 0){
-            //come en ese lugar
-            if (blackPieces.includes(matriz[row-2][col-1])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row-2][col-1]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row-2, col-1), depth-1).value + whitePlaceWeight.horseEval[row-2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col-1
-                    }
-                )
-            }
-
-            //se mueve a ese lugar
-            else if(matriz[row-2][col-1] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row-2, col-1), depth-1).value + whitePlaceWeight.horseEval[row-2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col-1
-                    }
-                )
-            }
-        }
-
-        if(row < 15 && col > 1){
-            if (blackPieces.includes(matriz[row+1][col-2])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row+1][col-2]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row+1, col-1), depth-1).value + whitePlaceWeight.horseEval[row+1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col-2
-                    }
-                )
-            }
         
-            //se mueve a ese lugar
-            else if(matriz[row+1][col-2] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row+1, col-2), depth-1).value + whitePlaceWeight.horseEval[row+1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col-2
+        for (let i = -2; i < 3; i += 4) {
+            for (let j = -1; j < 2; j += 2) {
+                if ( 1 < row && row < 14 && 0 < col && col < 15 ) {
+                    if(blackPieces.includes(matriz[row+i][col+j])){
+                        possibleMovementsWhite.push(
+                            {
+                                value: (valuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
                     }
-                )
+                    
+                    else if(matriz[row+i][col+j] == ' '){
+                        possibleMovementsWhite.push(
+                            {
+                                value: valuePieces.Horse + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
+                    }
+                }
             }
         }
 
-        if(row < 14 && col > 0){
-            if (blackPieces.includes(matriz[row+2][col-1])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row+2][col-1]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row+2, col-1), depth-1).value + whitePlaceWeight.horseEval[row+2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col-1
+        for (let i = -1; i < 2; i += 2) {
+            for (let j = -2; j < 3; j += 4) {
+
+                if( 0 < row && row < 14 && 1 < col && col < 15 ){
+                    if(blackPieces.includes(matriz[row+i][col+j])){
+                        possibleMovementsWhite.push(
+                            {
+                                value: (valuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
                     }
-                )
-            }
-        
-            //se mueve a ese lugar
-            else if(matriz[row+2][col-1] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row+2, col-1), depth-1).value + whitePlaceWeight.horseEval[row+2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col-1
+                    
+                    else if(matriz[row+i][col+j] == ' '){
+                        possibleMovementsWhite.push(
+                            {
+                                value: valuePieces.Horse + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
                     }
-                )
+                }
+
             }
         }
     }
@@ -367,25 +202,27 @@ function moveWhite(matriz, depth = deepness) {
                 )
                 break loop;
             }
-
-            //busco una blanca para saber hasta adonde me puedo mover
-            else if(whitePieces.includes(matriz[i][col])){
-
-                //comprueba que este a mas de un lugar de distancia esa pieza
-                if(row - i > 1){
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Rook - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value + whitePlaceWeight.rookEval[i+1][col],
-                            from_row: row,
-                            from_col: col,
-                            to_row: (i+1),
-                            to_col: col
-                        }
-                    )
-                } 
+            
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][col] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Rook + whitePlaceWeight.rookEval[i][col] - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: col
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
-        } 
+        }
+            
 
         //* busca la primera pieza que encuentra atras
         loop:
@@ -404,20 +241,23 @@ function moveWhite(matriz, depth = deepness) {
                 )
                 break loop;
             }
-            //si encuentra una blanca con un espacio vacio adelante, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[i][col])){
-                if ((i - row > 1)){
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Rook - moveBlack( movePiece( matriz, row, col, i, col), depth-1).value + whitePlaceWeight.rookEval[i-1][col],
-                            from_row: row,
-                            from_col: col,
-                            to_row: (i-1),
-                            to_col: col
-                        }
-                    )    
-                }
+
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][col] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Rook + whitePlaceWeight.rookEval[i][col] - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: col
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
         } 
@@ -440,20 +280,22 @@ function moveWhite(matriz, depth = deepness) {
                 break loop;
             }
 
-            //si encuentra una blanca con un espacio vacio a la izquierda, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[row][j]) ){
-                if (col - j > 1) {
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Rook - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value + whitePlaceWeight.rookEval[row][j-1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: row,
-                            to_col: (j-1)
-                        }
-                    )
-                }                
+            //si hay espacio vacio, movete ahi
+            else if(matriz[row][j] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Rook + whitePlaceWeight.rookEval[row][j] - moveBlack( movePiece(matriz, row, col, row, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: row,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
         }
@@ -476,20 +318,22 @@ function moveWhite(matriz, depth = deepness) {
                 break loop;
             }
 
-            //si encuentra una blanca con un espacio vacio a la izquierda, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[row][j]) ){
-                if (col - j > 1) {
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Rook - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value + whitePlaceWeight.rookEval[row][j-1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: row,
-                            to_col: (j-1)
-                        }
-                    )
-                }                
+            //si hay espacio vacio, movete ahi
+            else if(matriz[row][j] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Rook + whitePlaceWeight.rookEval[row][j] - moveBlack( movePiece(matriz, row, col, row, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: row,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
         }
@@ -497,6 +341,7 @@ function moveWhite(matriz, depth = deepness) {
     }
 
     function WhiteBishopMoves(matriz, row, col){
+      
         //* busca la primera pieza en diagonal superior izquierda
         loop:
         for (let i = row - 1, j = col - 1; i > 0 && j > 0; i--, j--){
@@ -515,20 +360,22 @@ function moveWhite(matriz, depth = deepness) {
                 break loop;
             }
 
-            //si encuentra una blanca con un espacio vacio atras, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[i][j])){
-                if((row - i > 1) && (col - j > 1)){
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Bishop - moveBlack( movePiece( matriz, row, col, i, j), depth-1).value + whitePlaceWeight.bishopEval[i+1][j+1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: i+1,
-                            to_col: j+1
-                        }
-                    )
-                }
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][j] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Bishop + whitePlaceWeight.bishopEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
         }
@@ -551,20 +398,22 @@ function moveWhite(matriz, depth = deepness) {
                 break loop;
             }
 
-            //si encuentra una blanca con un espacio vacio atras, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[i][j])){
-                if  (row - i > 1 &&  (j - col > 1)){
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Bishop - moveBlack( movePiece( matriz, row, col, i+1, col), depth-1).value + whitePlaceWeight.bishopEval[i+1][j-1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: i+1,
-                            to_col: j-1
-                        }
-                    )
-                }
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][j] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Bishop + whitePlaceWeight.bishopEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
         }
@@ -587,20 +436,22 @@ function moveWhite(matriz, depth = deepness) {
                 break loop;
             }
 
-            //si encuentra una blanca con un espacio vacio atras, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[i][j]) ){
-                if ((col - j > 1) && (i - row > 1)){
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Bishop  - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.bishopEval[i-1][j+1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: i-1,
-                            to_col: j+1
-                        }
-                    )
-                }
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][j] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Bishop + whitePlaceWeight.bishopEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
         }
@@ -623,23 +474,26 @@ function moveWhite(matriz, depth = deepness) {
                 break loop;
             }
 
-            //si encuentra una blanca con un espacio vacio atras, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[i][j]) ){
-                if((j - col > 1) && (i - row > 1)){
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Bishop - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.bishopEval[i-1][j-1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: i-1,
-                            to_col: j-1
-                        }
-                    )
-                }
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][j] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Bishop + whitePlaceWeight.bishopEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
         }
+        
     }
 
     function WhiteQueenMoves(matriz, row, col){
@@ -661,25 +515,27 @@ function moveWhite(matriz, depth = deepness) {
                 )
                 break loop;
             }
-
-            //busco una blanca para saber hasta adonde me puedo mover
-            else if(whitePieces.includes(matriz[i][col])){
-
-                //comprueba que este a mas de un lugar de distancia esa pieza
-                if(row - i > 1){
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Queen - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value + whitePlaceWeight.queenEval[i+1][col],
-                            from_row: row,
-                            from_col: col,
-                            to_row: (i+1),
-                            to_col: col
-                        }
-                    )
-                } 
+            
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][col] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Queen + whitePlaceWeight.queenEval[i][col] - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: col
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
-        } 
+        }
+            
 
         //* busca la primera pieza que encuentra atras
         loop:
@@ -698,20 +554,23 @@ function moveWhite(matriz, depth = deepness) {
                 )
                 break loop;
             }
-            //si encuentra una blanca con un espacio vacio adelante, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[i][col])){
-                if ((i - row > 1)){
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, i, col), depth-1).value + whitePlaceWeight.queenEval[i-1][col],
-                            from_row: row,
-                            from_col: col,
-                            to_row: (i-1),
-                            to_col: col
-                        }
-                    )    
-                }
+
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][col] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Queen + whitePlaceWeight.queenEval[i][col] - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: col
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
         } 
@@ -734,20 +593,22 @@ function moveWhite(matriz, depth = deepness) {
                 break loop;
             }
 
-            //si encuentra una blanca con un espacio vacio a la izquierda, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[row][j]) ){
-                if (col - j > 1) {
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value + whitePlaceWeight.queenEval[row][j-1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: row,
-                            to_col: (j-1)
-                        }
-                    )
-                }                
+            //si hay espacio vacio, movete ahi
+            else if(matriz[row][j] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Queen + whitePlaceWeight.queenEval[row][j] - moveBlack( movePiece(matriz, row, col, row, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: row,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
         }
@@ -770,20 +631,22 @@ function moveWhite(matriz, depth = deepness) {
                 break loop;
             }
 
-            //si encuentra una blanca con un espacio vacio a la izquierda, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[row][j]) ){
-                if (col - j > 1) {
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value + whitePlaceWeight.queenEval[row][j-1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: row,
-                            to_col: (j-1)
-                        }
-                    )
-                }                
+            //si hay espacio vacio, movete ahi
+            else if(matriz[row][j] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Queen + whitePlaceWeight.queenEval[row][j] - moveBlack( movePiece(matriz, row, col, row, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: row,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
         }
@@ -806,20 +669,22 @@ function moveWhite(matriz, depth = deepness) {
                 break loop;
             }
 
-            //si encuentra una blanca con un espacio vacio atras, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[i][j])){
-                if((row - i > 1) && (col - j > 1)){
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, i, j), depth-1).value + whitePlaceWeight.queenEval[i+1][j+1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: i+1,
-                            to_col: j+1
-                        }
-                    )
-                }
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][j] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Queen + whitePlaceWeight.queenEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
         }
@@ -842,20 +707,22 @@ function moveWhite(matriz, depth = deepness) {
                 break loop;
             }
 
-            //si encuentra una blanca con un espacio vacio atras, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[i][j])){
-                if  (row - i > 1 &&  (j - col > 1)){
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Queen - moveBlack( movePiece( matriz, row, col, i+1, col), depth-1).value + whitePlaceWeight.queenEval[i+1][j-1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: i+1,
-                            to_col: j-1
-                        }
-                    )
-                }
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][j] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Queen + whitePlaceWeight.queenEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
         }
@@ -878,20 +745,22 @@ function moveWhite(matriz, depth = deepness) {
                 break loop;
             }
 
-            //si encuentra una blanca con un espacio vacio atras, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[i][j]) ){
-                if ((col - j > 1) && (i - row > 1)){
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Queen  - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.queenEval[i-1][j+1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: i-1,
-                            to_col: j+1
-                        }
-                    )
-                }
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][j] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Queen + whitePlaceWeight.queenEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
         }
@@ -914,20 +783,22 @@ function moveWhite(matriz, depth = deepness) {
                 break loop;
             }
 
-            //si encuentra una blanca con un espacio vacio atras, 
-            //se mueve a ese espacio
-            else if(whitePieces.includes(matriz[i][j]) ){
-                if((j - col > 1) && (i - row > 1)){
-                    possibleMovementsWhite.push(
-                        {
-                            value: valuePieces.Queen - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.queenEval[i-1][j-1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: i-1,
-                            to_col: j-1
-                        }
-                    )
-                }
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][j] == ' '){
+                possibleMovementsWhite.push(
+                    {
+                        value: valuePieces.Queen + whitePlaceWeight.queenEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break loop;
             }
         }
@@ -942,7 +813,7 @@ function moveWhite(matriz, depth = deepness) {
 
             possibleMovementsWhite.push(
                 {
-                    value: ((valuePieces.Pawn) * weightPieces.firstRowPawn) - moveBlack(matrizNegra, depth-1).value,
+                    value: whitePlaceWeight.pawnEval[row-2][col] - moveBlack(matrizNegra, depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row-2),
@@ -956,7 +827,7 @@ function moveWhite(matriz, depth = deepness) {
 
             possibleMovementsWhite.push(
                 {
-                    value: ((valuePieces.Pawn) * weightPieces.secondRowPawn) - moveBlack( movePiece(matriz,row,col,row-2,col), depth-1).value,
+                    value: whitePlaceWeight.pawnEval[row-2][col] - moveBlack( movePiece(matriz,row,col,row-2,col), depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row-2),
@@ -969,7 +840,7 @@ function moveWhite(matriz, depth = deepness) {
         if((blackPieces.includes(matriz[row-1][col+1]))){
             possibleMovementsWhite.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row-1][col+1]]]) * weightPieces.eating) + weightPieces.movingFowardPawn - ((row-8-1) * 10) - moveBlack(movePiece(matriz, row, col, row-1, col+1), depth-1).value,
+                    value: whitePlaceWeight.pawnEval[row-1][col+1] + (valuePieces[letterToName[matriz[row-1][col+1]]]) * weightPieces.eating - moveBlack(movePiece(matriz, row, col, row-1, col+1), depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row-1),
@@ -983,7 +854,7 @@ function moveWhite(matriz, depth = deepness) {
 
             possibleMovementsWhite.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row-1][col-1]]]) * weightPieces.eating) + weightPieces.movingFowardPawn - ((row-8-1) * 10) - moveBlack(movePiece(matriz, row, col, row-1, col-1), depth-1).value,
+                    value: whitePlaceWeight.pawnEval[row-1][col-1] + (valuePieces[letterToName[matriz[row-1][col-1]]]) * weightPieces.eating - moveBlack(movePiece(matriz, row, col, row-1, col-1), depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row-1),
@@ -998,7 +869,7 @@ function moveWhite(matriz, depth = deepness) {
             possibleMovementsWhite.push(
                 {
                     //entre mas cerca este de convertirse en reina (fila 8), mas alto el puntaje
-                    value: ((valuePieces.Pawn) * weightPieces.movingFowardPawn - ((row-8-1) * 10)) - moveBlack(movePiece(matriz, row, col, row-1, col), depth-1).value,
+                    value: whitePlaceWeight.pawnEval[row-1][col] - moveBlack(movePiece(matriz, row, col, row-1, col), depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row-1),
@@ -1069,11 +940,6 @@ function moveBlack(matriz, depth = deepness) {
     let index = 0;
     index = possibleMovementsBlack.findIndex( s => s.value == max);
 
-    // if(possibleMovementsBlack[index].desc != undefined){
-    //     console.log(possibleMovementsBlack[index].desc)
-    // }
-
-
     let result = {
         value: possibleMovementsBlack[index].value,
         from_row: possibleMovementsBlack[index].from_row,
@@ -1086,228 +952,66 @@ function moveBlack(matriz, depth = deepness) {
     return result;
 
     function blackHorseMoves(matriz, row, col){
-    
-        //sin dudas la parte de codigo mas fea del programa, pero no se como hacerlo de otra manera
-    
-        if (row < 14 && col < 15){
-            //come en ese lugar
-            if (whitePieces.includes(matriz[row+2][col+1])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row+2][col+1]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row+2, col+1), depth-1).value) + blackPlaceWeight.horseEval[row+2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col+1
+
+        for (let i = -2; i < 3; i += 4) {
+            for (let j = -1; j < 2; j += 2) {
+                if ( 1 < row && row < 14 && 0 < col && col < 15 ) {
+                    if(whitePieces.includes(matriz[row+i][col+j])){
+                        possibleMovementsBlack.push(
+                            {
+                                value: (valuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveWhite( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
                     }
-                )
-            }
-    
-            //se mueve a ese lugar
-            else if(matriz[row+2][col+1] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value: (valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row+2, col+1), depth-1).value) + blackPlaceWeight.horseEval[row+2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col+1
+                    
+                    else if(matriz[row+i][col+j] == ' '){
+                        possibleMovementsBlack.push(
+                            {
+                                value: valuePieces.Horse + blackPlaceWeight.horseEval[row+i][col+j] - moveWhite( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
                     }
-                )
-            }
-        }
-    
-        if (row < 15 && col < 14){
-            //come en ese lugar
-            if (whitePieces.includes(matriz[row+1][col+2])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row+1][col+2]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row+1, col+2), depth-1).value) + blackPlaceWeight.horseEval[row+1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col+2
-                    }
-                )
-            }
-    
-            //se mueve a ese lugar
-            else if(matriz[row+1][col+2] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value: (valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row+1, col+2), depth-1).value) + blackPlaceWeight.horseEval[row+1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col+2
-                    }
-                )
+                }
             }
         }
-    
-        if (row > 1 && col < 15){
-            //come en ese lugar
-            if (whitePieces.includes(matriz[row-2][col+1])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row-2][col+1]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row-2, col+1), depth-1).value) + blackPlaceWeight.horseEval[row-2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col+1
+
+        for (let i = -1; i < 2; i += 2) {
+            for (let j = -2; j < 3; j += 4) {
+
+                if( 0 < row && row < 14 && 1 < col && col < 15 ){
+                    if(whitePieces.includes(matriz[row+i][col+j])){
+                        possibleMovementsBlack.push(
+                            {
+                                value: (valuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
                     }
-                )
-            }
-    
-            //se mueve a ese lugar
-            else if(matriz[row-2][col+1] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value: (valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row-2, col+1), depth-1).value) + blackPlaceWeight.horseEval[row-2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col+1
+                    
+                    else if(matriz[row+i][col+j] == ' '){
+                        possibleMovementsBlack.push(
+                            {
+                                value: valuePieces.Horse + blackPlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
                     }
-                )
-            }
-        }
-    
-        if (row > 0 && col < 14){
-            //come en ese lugar
-            if (whitePieces.includes(matriz[row-1][col+2])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row-1][col+2]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row-1, col+2), depth-1).value) + blackPlaceWeight.horseEval[row-1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col+2
-                    }
-                )
-            }
-    
-            //se mueve a ese lugar
-            else if(matriz[row-1][col+2] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value: (valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row-1, col+2), depth-1).value) + blackPlaceWeight.horseEval[row-1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col+2
-                    }
-                )
-            }
-        }
-    
-        if (row > 0 && col > 1){
-            //come en ese lugar
-            if (whitePieces.includes(matriz[row-1][col-2])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row-1][col-2]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row-1, col-2), depth-1).value) + blackPlaceWeight.horseEval[row-1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col-2
-                    }
-                )
-            }
-    
-            //se mueve a ese lugar
-            else if(matriz[row-1][col-2] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value:( valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row-1, col-2), depth-1).value) + blackPlaceWeight.horseEval[row-1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col-2
-                    }
-                )
-            }
-        }
-    
-        if (row > 1 && col > 0){
-            //come en ese lugar
-            if (whitePieces.includes(matriz[row-2][col-1])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row-2][col-1]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row-2, col-1), depth-1).value) + blackPlaceWeight.horseEval[row-2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col-1
-                    }
-                )
-            }
-    
-            //se mueve a ese lugar
-            else if(matriz[row-2][col-1] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value: (valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row-2, col-1), depth-1).value) + blackPlaceWeight.horseEval[row-2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col-1
-                    }
-                )
-            }
-        }
-    
-        if(row < 15 && col > 1){
-            if (whitePieces.includes(matriz[row+1][col-2])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row+1][col-2]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row+1, col-2), depth-1).value) + blackPlaceWeight.horseEval[row+1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col-2
-                    }
-                )
-            }
-        
-            //se mueve a ese lugar
-            else if(matriz[row+1][col-2] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value: (valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row+1, col-2), depth-1).value) + blackPlaceWeight.horseEval[row+1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col-2
-                    }
-                )
-            }
-        }
-    
-        if(row < 14 && col > 0){
-            if (whitePieces.includes(matriz[row+2][col-1])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row+2][col-1]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row+2, col-1), depth-1).value) + blackPlaceWeight.horseEval[row+2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col-1
-                    }
-                )
-            }
-        
-            //se mueve a ese lugar
-            else if(matriz[row+2][col-1] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value: (valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row+2, col-1), depth-1).value) + blackPlaceWeight.horseEval[row+2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col-1
-                    }
-                )
+                }
+
             }
         }
     }
@@ -1651,7 +1355,7 @@ function moveBlack(matriz, depth = deepness) {
     }
     
     function blackQueenMoves(matriz, row, col){
-        loop:
+        
         //* busca la primera pieza que encuentra adelante
         for (let i = row + 1 ; i < 16; i++){
     
@@ -1668,25 +1372,27 @@ function moveBlack(matriz, depth = deepness) {
                 )
                 break;
             }
-
-            //si encuentra una negra con un espacio vacio atras, 
-            //se mueve a ese espacio
-            else if(blackPieces.includes(matriz[i][col])){
-                if( i - row > 1){
-                    possibleMovementsBlack.push(
-                        {
-                            value: valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i, col), depth-1).value + blackPlaceWeight.queenEval[i-1][col],
-                            from_row: row,
-                            from_col: col,
-                            to_row: (i-1),
-                            to_col: col
-                        }
-                    )
-                } 
-                break;
+            
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][col] == ' '){
+                possibleMovementsBlack.push(
+                    {
+                        value: valuePieces.Queen + blackPlaceWeight.queenEval[i][col] - moveWhite( movePiece(matriz, row, col, i, col), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: col
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una negra, salite
+            else {
+                break
             }
         } 
-        loop:
+       
         //* busca la primera pieza que encuentra atras
         for (let i = row-1; i > 0; i--){
     
@@ -1704,26 +1410,27 @@ function moveBlack(matriz, depth = deepness) {
                 break;
             }
             
-            //si encuentra una negra con un espacio vacio adelante, 
-            //se mueve a ese espacio
-            else if(blackPieces.includes(matriz[i][col])){
-                if ((row - i > 1)){
-                    possibleMovementsBlack.push(
-                        {
-                            value: valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i, col),depth-1).value + blackPlaceWeight.queenEval[i+1][col],
-                            from_row: row,
-                            from_col: col,
-                            to_row: (i+1),
-                            to_col: col
-                        }
-                    )    
-                }
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][col] == ' '){
+                possibleMovementsBlack.push(
+                    {
+                        value: valuePieces.Queen + blackPlaceWeight.queenEval[i][col] - moveWhite( movePiece(matriz, row, col, i, col), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: col
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una blanca, salite
+            else {
                 break;
-
             }
 
-        } 
-        loop:
+        }
+        
         //* busca la primera pieza a la derecha
         for (let j = col-1; j > 0; j--){
     
@@ -1740,26 +1447,28 @@ function moveBlack(matriz, depth = deepness) {
                 )
                 break;
             }
-
-            //si encuentra una negra con un espacio vacio a la derecha, 
-            //se mueve a ese espacio
-            else if(blackPieces.includes(matriz[row][j]) ){
-                if(col - j > 1){
-                    possibleMovementsBlack.push(
-                        {
-                            value: valuePieces.Queen - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value + blackPlaceWeight.queenEval[row][j+1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: row,
-                            to_col: (j+1)
-                        }
-                    )
-                }
+            
+            //si hay espacio vacio, movete ahi
+            else if(matriz[row][j] == ' '){
+                possibleMovementsBlack.push(
+                    {
+                        value: valuePieces.Queen + blackPlaceWeight.queenEval[row][j] - moveWhite( movePiece(matriz, row, col, row, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: row,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una negra, salite
+            else {
                 break;
             }
 
         }
-        loop:
+        
         //* busca la primera pieza a la izquierda
         for (let j = col+1; j < 16; j++){
     
@@ -1776,25 +1485,25 @@ function moveBlack(matriz, depth = deepness) {
                 )
                 break;
             }
-    
-            //si encuentra una negra con un espacio vacio a la derecha, 
-            //se mueve a ese espacio
-            else if(blackPieces.includes(matriz[row][j]) ){
-                
-                if (col - j > 1) {
-                    possibleMovementsBlack.push(
-                        {
-                            value: valuePieces.Queen - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value + blackPlaceWeight.queenEval[row][j-1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: row,
-                            to_col: (j-1)
-                        }
-                    )
-                }                
-                break;
+            
+            //si hay espacio vacio, movete ahi
+            else if(matriz[row][j] == ' '){
+                possibleMovementsBlack.push(
+                    {
+                        value: valuePieces.Queen + blackPlaceWeight.queenEval[row][j] - moveWhite( movePiece(matriz, row, col, row, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: row,
+                        to_col: j
+                    }
+                )
+                continue;
             }
-    
+        
+            //si encontras una negra, salite
+            else {
+                break ;
+            }
         }
     
         //* busca la primera pieza en diagonal inferior derecha
@@ -1814,21 +1523,23 @@ function moveBlack(matriz, depth = deepness) {
                 )
                 break loop;
             }
-    
-            //si encuentra una negra con un espacio vacio atras, 
-            //se mueve a ese espacio
-            else if(blackPieces.includes(matriz[i][j]) ){
-                if(Math.abs(row - i) > 1 && (Math.abs(col - j) > 1)){
-                    possibleMovementsBlack.push(
-                        {
-                            value: valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value + blackPlaceWeight.queenEval[i+1][j+1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: i+1,
-                            to_col: j+1
-                        }
-                    )
-                }
+            
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][j] == ' '){
+                possibleMovementsBlack.push(
+                    {
+                        value: valuePieces.Queen + blackPlaceWeight.queenEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una negra, salite
+            else {
                 break loop;
             }
             
@@ -1851,21 +1562,23 @@ function moveBlack(matriz, depth = deepness) {
                 )
                 break loop;
             }
-    
-            //si encuentra una negra con un espacio vacio atras, 
-            //se mueve a ese espacio
-            else if(blackPieces.includes(matriz[i][j])){
-                if  (Math.abs(row - i) > 1 && (Math.abs(j - col) > 1)){
-                    possibleMovementsBlack.push(
-                        {
-                            value: valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value + blackPlaceWeight.queenEval[i+1][j-1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: i+1,
-                            to_col: j-1
-                        }
-                    )
-                }
+            
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][j] == ' '){
+                possibleMovementsBlack.push(
+                    {
+                        value: valuePieces.Queen + blackPlaceWeight.queenEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una negra, salite
+            else {
                 break loop;
             }
             
@@ -1888,21 +1601,23 @@ function moveBlack(matriz, depth = deepness) {
                 )
                 break loop;
             }
-    
-            //si encuentra una negra con un espacio vacio atras, 
-            //se mueve a ese espacio
-            else if(blackPieces.includes(matriz[i][j]) ){
-                if (Math.abs(col - j) > 1 && Math.abs(i - row) > 1){
-                    possibleMovementsBlack.push(
-                        {
-                            value: valuePieces.Queen - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value + blackPlaceWeight.queenEval[i-1][j+1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: i-1,
-                            to_col: j+1
-                        }
-                    )
-                }
+            
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][j] == ' '){
+                possibleMovementsBlack.push(
+                    {
+                        value: valuePieces.Queen + blackPlaceWeight.queenEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una negra, salite
+            else {
                 break loop;
             }
         }
@@ -1926,20 +1641,22 @@ function moveBlack(matriz, depth = deepness) {
                 break loop;
             }
     
-            //si encuentra una negra con un espacio vacio atras, 
-            //se mueve a ese espacio
-            else if(blackPieces.includes(matriz[i][j]) ){
-                if( Math.abs(j - col) > 1 && Math.abs(i - row ) > 1){
-                    possibleMovementsBlack.push(
-                        {
-                            value: valuePieces.Queen - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value + blackPlaceWeight.queenEval[i-1][j-1],
-                            from_row: row,
-                            from_col: col,
-                            to_row: i-1,
-                            to_col: j-1
-                        }
-                    )
-                }
+            //si hay espacio vacio, movete ahi
+            else if(matriz[i][j] == ' '){
+                possibleMovementsBlack.push(
+                    {
+                        value: valuePieces.Queen + blackPlaceWeight.queenEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
+                        from_row: row,
+                        from_col: col,
+                        to_row: i,
+                        to_col: j
+                    }
+                )
+                continue;
+            }
+        
+            //si encontras una negra, salite
+            else {
                 break loop;
             }
         }
@@ -1952,7 +1669,7 @@ function moveBlack(matriz, depth = deepness) {
             let matrizBlanca = movePiece(matriz, row, col, row+2, col);
             possibleMovementsBlack.push(
                 {
-                    value: (((valuePieces.Pawn) * weightPieces.firstRowPawn) - moveWhite( matrizBlanca, depth-1).value),
+                    value: blackPlaceWeight.pawnEval[row+2][col] - moveWhite( matrizBlanca, depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row+2),
@@ -1966,7 +1683,7 @@ function moveBlack(matriz, depth = deepness) {
             let matrizBlanca = movePiece(matriz, row, col, row+2, col)
             possibleMovementsBlack.push(
                 {
-                    value: (((valuePieces.Pawn) * weightPieces.secondRowPawn) - moveWhite( matrizBlanca , depth-1).value),
+                    value: blackPlaceWeight.pawnEval[row+2][col] - moveWhite( matrizBlanca , depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row+2),
@@ -1980,7 +1697,7 @@ function moveBlack(matriz, depth = deepness) {
             let matrizBlanca = movePiece(matriz, row, col, row+1, col+1)
             possibleMovementsBlack.push(
                 {
-                value:(((valuePieces[letterToName[matriz[row+1][col+1]]]) * weightPieces.eating) +  weightPieces.movingFowardPawn - ((7-row-1) * 10) - moveWhite( matrizBlanca, depth-1).value),
+                value: blackPlaceWeight.pawnEval[row+1][col+1] + (valuePieces[letterToName[matriz[row+1][col+1]]]) * weightPieces.eating - moveWhite( matrizBlanca, depth-1).value,
                 from_row: row,
                 from_col: col,
                 to_row: (row+1),
@@ -1994,7 +1711,7 @@ function moveBlack(matriz, depth = deepness) {
             let matrizBlanca = movePiece(matriz, row, col, row+1, col-1)
             possibleMovementsBlack.push(
                 {
-                    value: (((valuePieces[letterToName[matriz[row+1][col-1]]]) * weightPieces.eating) +  weightPieces.movingFowardPawn - ((7-row-1) * 10) - moveWhite( matrizBlanca, depth-1).value),
+                    value: blackPlaceWeight.pawnEval[row+1][col-1] + (valuePieces[letterToName[matriz[row+1][col-1]]]) * weightPieces.eating - moveWhite( matrizBlanca, depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row+1),
@@ -2009,7 +1726,7 @@ function moveBlack(matriz, depth = deepness) {
             possibleMovementsBlack.push(
                 {
                     //entre mas cerca este de convertirse en reina (fila 8), mas alto el puntaje
-                    value: (((valuePieces.Pawn) * weightPieces.movingFowardPawn - ((7-row-1) * 10)) - moveWhite( matrizBlanca, depth-1).value),
+                    value: blackPlaceWeight.pawnEval[row+1][col] - moveWhite(matrizBlanca, depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row+1),

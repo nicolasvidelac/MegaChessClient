@@ -1,4 +1,4 @@
-const { my_turn } = require("./my_turn")
+const { my_turn } = require("../responses/my_turn")
 
 test( 'should return json', () => {
     let data = {
@@ -17,9 +17,9 @@ test( 'should return json', () => {
                 board_id: data.board_id,
                 turn_token: data.turn_token,
                 from_row: 12,
-                from_col: 0,
+                from_col: 6,
                 to_row: 10,
-                to_col: 0,
+                to_col: 6,
             }
         })
     )
@@ -42,9 +42,9 @@ test( 'should return json', () => {
                 board_id: data.board_id,
                 turn_token: data.turn_token,
                 from_row: 3,
-                from_col: 0,
+                from_col: 6,
                 to_row: 5,
-                to_col: 0,
+                to_col: 6,
             }
         })
     )

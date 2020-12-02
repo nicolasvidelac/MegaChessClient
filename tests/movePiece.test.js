@@ -1,4 +1,4 @@
-const { movePiece } = require("./movePiece");
+const { movePiece } = require("../utilities/movePiece");
 
 test('should return a matrix with piece moved', () => {
   let matriz = [
@@ -346,7 +346,6 @@ test('should return a matrix with piece moved', () => {
   expect(func).toStrictEqual(result)
 })
 
-
 test('should throw error', () => {
   
   //matriz de 14 filas
@@ -442,10 +441,10 @@ test('should throw error', () => {
         'H', 'H', 'R', 'R'
       ]
   ];
-  
   expect(() => {
     movePiece(matriz, 1,8,2,8)
   }).toThrowError('matriz de formato incorrecto');
+
 })
 
 test('should throw error', () => {
