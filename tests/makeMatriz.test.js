@@ -108,7 +108,7 @@ test('should output array', () => {
 })
 
 test('should output array', () => {
-  let board = 'rrhhbbqqkkbbhhrrrrhhbbqqkkbbhhrr    pppppppppppp                p                  p                           pqqq q  qqqqqqqq       q    q    P        P    qP P P      P P       PP PP P P PPP  P PP  P   q   P              R               R            q  '
+  let board  = 'rrhhbbqqkkbbhhrrrrhhbbqqkkbbhhrr    pppppppppppp                p                  p                           pqqq q  qqqqqqqq       q    q    P        P    qP P P      P P       PP PP P P PPP  P PP  P   q   P              R               R            q  '
   let matriz = makeMatriz(board)
   let result = [
     ['r', 'r', 'h', 'h','b', 'b', 'q', 'q','k', 'k', 'b', 'b','h', 'h', 'r', 'r'],

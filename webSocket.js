@@ -69,7 +69,9 @@ ws.on('connect', function (connection) {
 
             case'gameover':
                 //muestro el resultado
-                console.log("\nEnd of Match - Winner: ", data.data.white_score > data.data.black_score ? data.data.white_username : data.data.black_username) 
+                console.log("\nEnd of Match - Winner:", Number(data.data.white_score) > Number(data.data.black_score) ? 
+                    `${data.data.white_username} with whites` : `${data.data.black_username} with blacks`) 
+                    
                 console.log("White user: ", data.data.white_username, ", with score: ", data.data.white_score);
                 console.log("Black user: ", data.data.black_username, ", with score: ", data.data.black_score, '\n');
                 

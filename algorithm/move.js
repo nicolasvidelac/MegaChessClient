@@ -20,8 +20,8 @@ function moveWhite(matriz, depth = deepness) {
     
     //itero sobre toda la matriz buscando mis piezas 
     //y ejecuto la funcion correspondiente cuando encuentro una pieza
-     for(let col = 0; col < 16; col++){
-        for(let row = 15; row > 0; row--){
+     for( let col = 0; col < 16; col++ ){
+        for( let row = 15; row > 0; row-- ){
 
             switch (matriz[row][col]){
 
@@ -66,7 +66,6 @@ function moveWhite(matriz, depth = deepness) {
 
     // console.log(possibleMovementsWhite)
 
-    
     // guardo el indice de ese maximo
     let index = 0;
     index = possibleMovementsWhite.findIndex( s => s.value == max);
@@ -85,225 +84,70 @@ function moveWhite(matriz, depth = deepness) {
     
     function WhiteHorseMoves(matriz, row, col){
 
-        if (row < 14 && col < 15){
-            //come en ese lugar
-            if (blackPieces.includes(matriz[row+2][col+1])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row+2][col+1]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row+2, col+1), depth-1).value + whitePlaceWeight.horseEval[row+2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col+1
-                    }
-                )
-            }
-
-            //se mueve a ese lugar
-            else if(matriz[row+2][col+1] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row+2, col+1), depth-1).value + whitePlaceWeight.horseEval[row+2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col+1
-                    }
-                )
-            }
-        }
-
-        if (row < 15 && col < 14){
-            //come en ese lugar
-            if (blackPieces.includes(matriz[row+1][col+2])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row+1][col+2]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row+1, col+2), depth-1).value + whitePlaceWeight.horseEval[row+1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col+2
-                    }
-                )
-            }
-
-            //se mueve a ese lugar
-            else if(matriz[row+1][col+2] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row+1, col+2), depth-1).value + whitePlaceWeight.horseEval[row+1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col+2
-                    }
-                )
-            }
-        }
-
-        if (row > 1 && col < 15){
-            //come en ese lugar
-            if (blackPieces.includes(matriz[row-2][col+1])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row-2][col+1]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row-2, col+1), depth-1).value + whitePlaceWeight.horseEval[row-2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col+1
-                    }
-                )
-            }
-
-            //se mueve a ese lugar
-            else if(matriz[row-2][col+1] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row-2, col+1), depth-1).value + whitePlaceWeight.horseEval[row-2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col+1
-                    }
-                )
-            }
-        }
-
-        if (row > 0 && col < 14){
-            //come en ese lugar
-            if (blackPieces.includes(matriz[row-1][col+2])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row-1][col+2]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row-1, col+2), depth-1).value + whitePlaceWeight.horseEval[row-1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col+2
-                    }
-                )
-            }
-
-            //se mueve a ese lugar
-            else if(matriz[row-1][col+2] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row-1, col+2), depth-1).value + whitePlaceWeight.horseEval[row-1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col+2
-                    }
-                )
-            }
-        }
-
-        if (row > 0 && col > 1){
-            //come en ese lugar
-            if (blackPieces.includes(matriz[row-1][col-2])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row-1][col-2]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row-1, col-2), depth-1).value + whitePlaceWeight.horseEval[row-1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col-2
-                    }
-                )
-            }
-
-            //se mueve a ese lugar
-            else if(matriz[row-1][col-2] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row-1, col-2), depth-1).value + whitePlaceWeight.horseEval[row-1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col-2
-                    }
-                )
-            }
-        }
-
-        if (row > 1 && col > 0){
-            //come en ese lugar
-            if (blackPieces.includes(matriz[row-2][col-1])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row-2][col-1]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row-2, col-1), depth-1).value + whitePlaceWeight.horseEval[row-2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col-1
-                    }
-                )
-            }
-
-            //se mueve a ese lugar
-            else if(matriz[row-2][col-1] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row-2, col-1), depth-1).value + whitePlaceWeight.horseEval[row-2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col-1
-                    }
-                )
-            }
-        }
-
-        if(row < 15 && col > 1){
-            if (blackPieces.includes(matriz[row+1][col-2])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row+1][col-2]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row+1, col-1), depth-1).value + whitePlaceWeight.horseEval[row+1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col-2
-                    }
-                )
-            }
+        // let x = [-2, 2];
+        // let y = [-1, 1];
         
-            //se mueve a ese lugar
-            else if(matriz[row+1][col-2] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row+1, col-2), depth-1).value + whitePlaceWeight.horseEval[row+1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col-2
+        for (let i = -2; i < 3; i += 4) {
+            for (let j = -1; j < 2; j += 2) {
+                // console.log(row, col)
+                if ( 1 < row && row < 14 && 0 < col && col < 15 ) {
+                    // console.log(row, col)
+                    if(blackPieces.includes(matriz[row+i][col+j])){
+                        possibleMovementsWhite.push(
+                            {
+                                value: (valuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
                     }
-                )
+                    
+                    else if(matriz[row+i][col+j] == ' '){
+                        possibleMovementsWhite.push(
+                            {
+                                value: valuePieces.Horse + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
+                    }
+                }
             }
         }
 
-        if(row < 14 && col > 0){
-            if (blackPieces.includes(matriz[row+2][col-1])){
-                possibleMovementsWhite.push(
-                    {
-                        value: ((valuePieces[letterToName[matriz[row+2][col-1]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, row+2, col-1), depth-1).value + whitePlaceWeight.horseEval[row+2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col-1
+        for (let i = -1; i < 2; i += 2) {
+            for (let j = -2; j < 3; j += 4) {
+
+                if( 0 < row && row < 14 && 1 < col && col < 15 ){
+                    if(blackPieces.includes(matriz[row+i][col+j])){
+                        possibleMovementsWhite.push(
+                            {
+                                value: (valuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
                     }
-                )
-            }
-        
-            //se mueve a ese lugar
-            else if(matriz[row+2][col-1] == ' '){
-                possibleMovementsWhite.push(
-                    {
-                        value: valuePieces.Horse - moveBlack( movePiece(matriz, row, col, row+2, col-1), depth-1).value + whitePlaceWeight.horseEval[row+2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col-1
+                    
+                    else if(matriz[row+i][col+j] == ' '){
+                        possibleMovementsWhite.push(
+                            {
+                                value: valuePieces.Horse + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
                     }
-                )
+                }
+
             }
         }
     }
@@ -644,6 +488,8 @@ function moveWhite(matriz, depth = deepness) {
 
     function WhiteQueenMoves(matriz, row, col){
 
+ 
+
         loop:
         //* busca la primera pieza que encuentra adelante
         for (let i = row - 1; i > 0; i--){
@@ -830,6 +676,7 @@ function moveWhite(matriz, depth = deepness) {
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
+                // console.log(i, j)
                 possibleMovementsWhite.push(
                     {
                         value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating)  - moveBlack( movePiece( matriz, row, col, i+1, col), depth-1).value + whitePlaceWeight.queenEval[i][j],
@@ -942,7 +789,7 @@ function moveWhite(matriz, depth = deepness) {
 
             possibleMovementsWhite.push(
                 {
-                    value: ((valuePieces.Pawn) * weightPieces.firstRowPawn) - moveBlack(matrizNegra, depth-1).value,
+                    value: whitePlaceWeight.pawnEval[row-2][col] - moveBlack(matrizNegra, depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row-2),
@@ -956,7 +803,7 @@ function moveWhite(matriz, depth = deepness) {
 
             possibleMovementsWhite.push(
                 {
-                    value: ((valuePieces.Pawn) * weightPieces.secondRowPawn) - moveBlack( movePiece(matriz,row,col,row-2,col), depth-1).value,
+                    value: whitePlaceWeight.pawnEval[row-2][col] - moveBlack( movePiece(matriz,row,col,row-2,col), depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row-2),
@@ -969,7 +816,7 @@ function moveWhite(matriz, depth = deepness) {
         if((blackPieces.includes(matriz[row-1][col+1]))){
             possibleMovementsWhite.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row-1][col+1]]]) * weightPieces.eating) + weightPieces.movingFowardPawn - ((row-8-1) * 10) - moveBlack(movePiece(matriz, row, col, row-1, col+1), depth-1).value,
+                    value: whitePlaceWeight.pawnEval[row-1][col+1] + (valuePieces[letterToName[matriz[row-1][col+1]]]) * weightPieces.eating - moveBlack(movePiece(matriz, row, col, row-1, col+1), depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row-1),
@@ -983,7 +830,7 @@ function moveWhite(matriz, depth = deepness) {
 
             possibleMovementsWhite.push(
                 {
-                    value: ((valuePieces[letterToName[matriz[row-1][col-1]]]) * weightPieces.eating) + weightPieces.movingFowardPawn - ((row-8-1) * 10) - moveBlack(movePiece(matriz, row, col, row-1, col-1), depth-1).value,
+                    value: whitePlaceWeight.pawnEval[row-1][col-1] + (valuePieces[letterToName[matriz[row-1][col-1]]]) * weightPieces.eating - moveBlack(movePiece(matriz, row, col, row-1, col-1), depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row-1),
@@ -998,7 +845,7 @@ function moveWhite(matriz, depth = deepness) {
             possibleMovementsWhite.push(
                 {
                     //entre mas cerca este de convertirse en reina (fila 8), mas alto el puntaje
-                    value: ((valuePieces.Pawn) * weightPieces.movingFowardPawn - ((row-8-1) * 10)) - moveBlack(movePiece(matriz, row, col, row-1, col), depth-1).value,
+                    value: whitePlaceWeight.pawnEval[row-1][col] - moveBlack(movePiece(matriz, row, col, row-1, col), depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row-1),
@@ -1069,8 +916,8 @@ function moveBlack(matriz, depth = deepness) {
     let index = 0;
     index = possibleMovementsBlack.findIndex( s => s.value == max);
 
-    // if(possibleMovementsBlack[index].desc != undefined){
-    //     console.log(possibleMovementsBlack[index].desc)
+    // if(depth == deepness){
+    //     console.table(matriz)
     // }
 
 
@@ -1086,228 +933,68 @@ function moveBlack(matriz, depth = deepness) {
     return result;
 
     function blackHorseMoves(matriz, row, col){
-    
-        //sin dudas la parte de codigo mas fea del programa, pero no se como hacerlo de otra manera
-    
-        if (row < 14 && col < 15){
-            //come en ese lugar
-            if (whitePieces.includes(matriz[row+2][col+1])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row+2][col+1]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row+2, col+1), depth-1).value) + blackPlaceWeight.horseEval[row+2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col+1
+
+        for (let i = -2; i < 3; i += 4) {
+            for (let j = -1; j < 2; j += 2) {
+                // console.log(row, col)
+                if ( 1 < row && row < 14 && 0 < col && col < 15 ) {
+                    // console.log(row, col)
+                    if(whitePieces.includes(matriz[row+i][col+j])){
+                        possibleMovementsBlack.push(
+                            {
+                                value: (valuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveWhite( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
                     }
-                )
-            }
-    
-            //se mueve a ese lugar
-            else if(matriz[row+2][col+1] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value: (valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row+2, col+1), depth-1).value) + blackPlaceWeight.horseEval[row+2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col+1
+                    
+                    else if(matriz[row+i][col+j] == ' '){
+                        possibleMovementsBlack.push(
+                            {
+                                value: valuePieces.Horse + blackPlaceWeight.horseEval[row+i][col+j] - moveWhite( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
                     }
-                )
-            }
-        }
-    
-        if (row < 15 && col < 14){
-            //come en ese lugar
-            if (whitePieces.includes(matriz[row+1][col+2])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row+1][col+2]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row+1, col+2), depth-1).value) + blackPlaceWeight.horseEval[row+1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col+2
-                    }
-                )
-            }
-    
-            //se mueve a ese lugar
-            else if(matriz[row+1][col+2] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value: (valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row+1, col+2), depth-1).value) + blackPlaceWeight.horseEval[row+1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col+2
-                    }
-                )
+                }
             }
         }
-    
-        if (row > 1 && col < 15){
-            //come en ese lugar
-            if (whitePieces.includes(matriz[row-2][col+1])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row-2][col+1]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row-2, col+1), depth-1).value) + blackPlaceWeight.horseEval[row-2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col+1
+
+        for (let i = -1; i < 2; i += 2) {
+            for (let j = -2; j < 3; j += 4) {
+
+                if( 0 < row && row < 14 && 1 < col && col < 15 ){
+                    if(whitePieces.includes(matriz[row+i][col+j])){
+                        possibleMovementsBlack.push(
+                            {
+                                value: (valuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
                     }
-                )
-            }
-    
-            //se mueve a ese lugar
-            else if(matriz[row-2][col+1] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value: (valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row-2, col+1), depth-1).value) + blackPlaceWeight.horseEval[row-2][col+1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col+1
+                    
+                    else if(matriz[row+i][col+j] == ' '){
+                        possibleMovementsBlack.push(
+                            {
+                                value: valuePieces.Horse + blackPlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
+                                from_row: row,
+                                from_col: col,
+                                to_row: row+i,
+                                to_col: col+j
+                            }
+                        )
                     }
-                )
-            }
-        }
-    
-        if (row > 0 && col < 14){
-            //come en ese lugar
-            if (whitePieces.includes(matriz[row-1][col+2])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row-1][col+2]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row-1, col+2), depth-1).value) + blackPlaceWeight.horseEval[row-1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col+2
-                    }
-                )
-            }
-    
-            //se mueve a ese lugar
-            else if(matriz[row-1][col+2] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value: (valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row-1, col+2), depth-1).value) + blackPlaceWeight.horseEval[row-1][col+2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col+2
-                    }
-                )
-            }
-        }
-    
-        if (row > 0 && col > 1){
-            //come en ese lugar
-            if (whitePieces.includes(matriz[row-1][col-2])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row-1][col-2]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row-1, col-2), depth-1).value) + blackPlaceWeight.horseEval[row-1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col-2
-                    }
-                )
-            }
-    
-            //se mueve a ese lugar
-            else if(matriz[row-1][col-2] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value:( valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row-1, col-2), depth-1).value) + blackPlaceWeight.horseEval[row-1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-1,
-                        to_col: col-2
-                    }
-                )
-            }
-        }
-    
-        if (row > 1 && col > 0){
-            //come en ese lugar
-            if (whitePieces.includes(matriz[row-2][col-1])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row-2][col-1]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row-2, col-1), depth-1).value) + blackPlaceWeight.horseEval[row-2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col-1
-                    }
-                )
-            }
-    
-            //se mueve a ese lugar
-            else if(matriz[row-2][col-1] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value: (valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row-2, col-1), depth-1).value) + blackPlaceWeight.horseEval[row-2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row-2,
-                        to_col: col-1
-                    }
-                )
-            }
-        }
-    
-        if(row < 15 && col > 1){
-            if (whitePieces.includes(matriz[row+1][col-2])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row+1][col-2]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row+1, col-2), depth-1).value) + blackPlaceWeight.horseEval[row+1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col-2
-                    }
-                )
-            }
-        
-            //se mueve a ese lugar
-            else if(matriz[row+1][col-2] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value: (valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row+1, col-2), depth-1).value) + blackPlaceWeight.horseEval[row+1][col-2],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+1,
-                        to_col: col-2
-                    }
-                )
-            }
-        }
-    
-        if(row < 14 && col > 0){
-            if (whitePieces.includes(matriz[row+2][col-1])){
-                possibleMovementsBlack.push(
-                    {
-                        value: (((valuePieces[letterToName[matriz[row+2][col-1]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, row+2, col-1), depth-1).value) + blackPlaceWeight.horseEval[row+2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col-1
-                    }
-                )
-            }
-        
-            //se mueve a ese lugar
-            else if(matriz[row+2][col-1] == ' '){
-                possibleMovementsBlack.push(
-                    {
-                        value: (valuePieces.Horse - moveWhite( movePiece(matriz, row, col, row+2, col-1), depth-1).value) + blackPlaceWeight.horseEval[row+2][col-1],
-                        from_row: row,
-                        from_col: col,
-                        to_row: row+2,
-                        to_col: col-1
-                    }
-                )
+                }
+
             }
         }
     }
@@ -1651,7 +1338,7 @@ function moveBlack(matriz, depth = deepness) {
     }
     
     function blackQueenMoves(matriz, row, col){
-        loop:
+        
         //* busca la primera pieza que encuentra adelante
         for (let i = row + 1 ; i < 16; i++){
     
@@ -1686,7 +1373,7 @@ function moveBlack(matriz, depth = deepness) {
                 break;
             }
         } 
-        loop:
+       
         //* busca la primera pieza que encuentra atras
         for (let i = row-1; i > 0; i--){
     
@@ -1723,7 +1410,7 @@ function moveBlack(matriz, depth = deepness) {
             }
 
         } 
-        loop:
+        
         //* busca la primera pieza a la derecha
         for (let j = col-1; j > 0; j--){
     
@@ -1759,7 +1446,7 @@ function moveBlack(matriz, depth = deepness) {
             }
 
         }
-        loop:
+        
         //* busca la primera pieza a la izquierda
         for (let j = col+1; j < 16; j++){
     
@@ -1952,7 +1639,7 @@ function moveBlack(matriz, depth = deepness) {
             let matrizBlanca = movePiece(matriz, row, col, row+2, col);
             possibleMovementsBlack.push(
                 {
-                    value: (((valuePieces.Pawn) * weightPieces.firstRowPawn) - moveWhite( matrizBlanca, depth-1).value),
+                    value: blackPlaceWeight.pawnEval[row+2][col] - moveWhite( matrizBlanca, depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row+2),
@@ -1966,7 +1653,7 @@ function moveBlack(matriz, depth = deepness) {
             let matrizBlanca = movePiece(matriz, row, col, row+2, col)
             possibleMovementsBlack.push(
                 {
-                    value: (((valuePieces.Pawn) * weightPieces.secondRowPawn) - moveWhite( matrizBlanca , depth-1).value),
+                    value: blackPlaceWeight.pawnEval[row+2][col] - moveWhite( matrizBlanca , depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row+2),
@@ -1980,7 +1667,7 @@ function moveBlack(matriz, depth = deepness) {
             let matrizBlanca = movePiece(matriz, row, col, row+1, col+1)
             possibleMovementsBlack.push(
                 {
-                value:(((valuePieces[letterToName[matriz[row+1][col+1]]]) * weightPieces.eating) +  weightPieces.movingFowardPawn - ((7-row-1) * 10) - moveWhite( matrizBlanca, depth-1).value),
+                value: blackPlaceWeight.pawnEval[row+1][col+1] + (valuePieces[letterToName[matriz[row+1][col+1]]]) * weightPieces.eating - moveWhite( matrizBlanca, depth-1).value,
                 from_row: row,
                 from_col: col,
                 to_row: (row+1),
@@ -1994,7 +1681,7 @@ function moveBlack(matriz, depth = deepness) {
             let matrizBlanca = movePiece(matriz, row, col, row+1, col-1)
             possibleMovementsBlack.push(
                 {
-                    value: (((valuePieces[letterToName[matriz[row+1][col-1]]]) * weightPieces.eating) +  weightPieces.movingFowardPawn - ((7-row-1) * 10) - moveWhite( matrizBlanca, depth-1).value),
+                    value: blackPlaceWeight.pawnEval[row+1][col-1] + (valuePieces[letterToName[matriz[row+1][col-1]]]) * weightPieces.eating - moveWhite( matrizBlanca, depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row+1),
@@ -2009,7 +1696,7 @@ function moveBlack(matriz, depth = deepness) {
             possibleMovementsBlack.push(
                 {
                     //entre mas cerca este de convertirse en reina (fila 8), mas alto el puntaje
-                    value: (((valuePieces.Pawn) * weightPieces.movingFowardPawn - ((7-row-1) * 10)) - moveWhite( matrizBlanca, depth-1).value),
+                    value: blackPlaceWeight.pawnEval[row+1][col] - moveWhite(matrizBlanca, depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row+1),
