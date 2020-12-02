@@ -1,4 +1,4 @@
-const { makeMatriz } = require("./makeMatriz")
+const { makeMatriz } = require("../utilities/makeMatriz")
 
 
 test('should output array', () => {

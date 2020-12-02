@@ -1,4 +1,4 @@
-const { moveWhite, moveBlack } = require("./move");
+const { moveWhite, moveBlack } = require("../algorithm/move");
 const each = require('jest-each').default;
 
 //* End of cycle test

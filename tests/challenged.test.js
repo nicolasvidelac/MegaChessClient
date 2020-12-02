@@ -1,4 +1,4 @@
-const { challenged } = require("./challenged");
+const { challenged } = require("../responses/challenged");
 
 test('should return json', () => {
     expect(challenged('2d3422223-2e79-49a61-3436-1b000e13a5'))

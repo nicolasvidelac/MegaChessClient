@@ -1,4 +1,4 @@
-const { movePiece } = require("./movePiece");
+const { movePiece } = require("../utilities/movePiece");
 
 test('should return a matrix with piece moved', () => {
   let matriz = [

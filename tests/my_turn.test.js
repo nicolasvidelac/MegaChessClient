@@ -1,4 +1,4 @@
-const { my_turn } = require("./my_turn")
+const { my_turn } = require("../responses/my_turn")
 
 test( 'should return json', () => {
     let data = {
