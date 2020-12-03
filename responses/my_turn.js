@@ -6,6 +6,7 @@ exports.my_turn = (data) => {
     let result;
 
     if (data.username != myUsername){
+        console.log(data)
         throw new Error('different username')
     }
 
@@ -14,7 +15,7 @@ exports.my_turn = (data) => {
         case 'black':
             console.log("turno black")
             result = moveBlack(makeMatriz(data.board))
-            // console.log('enviado')
+            console.log('enviado')
             return JSON.stringify({
                 action: 'move',
                 data: {
@@ -30,7 +31,7 @@ exports.my_turn = (data) => {
         case 'white':
             console.log("turno white")
             result = moveWhite(makeMatriz(data.board))
-            // console.log('enviado')
+            console.log('enviado')
             return JSON.stringify({
                 action: 'move',
                 data: {
