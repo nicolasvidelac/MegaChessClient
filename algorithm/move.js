@@ -9,7 +9,7 @@ const { movePiece } = require("../utilities/movePiece");
 let deepness = 3;
 
 //cantidad de lugares vacios que pueden encontrar y continuar buscando las reinas, alfiles y torres
-let stopMeter = 3;
+let stopMeter = 2;
 
 function moveWhite(matriz, depth = deepness) {
 

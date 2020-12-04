@@ -48,11 +48,15 @@ ws.on('connect', function (connection) {
 
             case 'ask_challenge':
                 
+                //todo eliminar esto
+                if (data.data.username != 'Gonzalo'){
                 //muestro quien me desafio
                 console.log("challenged by ", data.data.username)
 
                 //manda la respuesta al desafio
                 connection.sendUTF(Challenged.challenged(data.data.board_id));
+                }
+
                 break;
 
             case 'your_turn':
