@@ -1,8 +1,8 @@
 exports.valuePieces = {
     Pawn: 10,
     Horse: 30,
-    Bishop: 40,
-    Rook: 60,
-    Queen: 25,
+    Bishop: 30,
+    Rook: 50,
+    Queen: 90, //90 mejor hasta ahora
     King: 100
 }
