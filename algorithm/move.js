@@ -71,16 +71,24 @@ function moveWhite(matriz, depth = deepness) {
     let index = 0;
     index = possibleMovementsWhite.findIndex( s => s.value == max);
 
-    let result = {
-        value: possibleMovementsWhite[index].value,
-        from_row: possibleMovementsWhite[index].from_row,
-        from_col: possibleMovementsWhite[index].from_col,
-        to_row: possibleMovementsWhite[index].to_row,
-        to_col: possibleMovementsWhite[index].to_col,
+    try {
+        let result = {
+            value: possibleMovementsWhite[index].value,
+            from_row: possibleMovementsWhite[index].from_row,
+            from_col: possibleMovementsWhite[index].from_col,
+            to_row: possibleMovementsWhite[index].to_row,
+            to_col: possibleMovementsWhite[index].to_col,
+        }
+        
+        // devuelvo los datos desde y hacia del movimiento de mayor valor
+        return result;
+        
+    } catch (error) {
+        console.log("error: ", error)
+        console.log("index: ",index)
+        console.log("array: ", possibleMovementsWhite)
     }
 
-    // devuelvo los datos desde y hacia del movimiento de mayor valor
-    return result;
     
     function WhiteHorseMoves(matriz, row, col){
         

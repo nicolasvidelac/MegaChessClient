@@ -47,22 +47,18 @@ ws.on('connect', function (connection) {
                 break;
 
             case 'ask_challenge':
-                console.log("challenged by ", data.data.username)
 
-                //todo eliminar esto
-                if (data.data.username != 'Gonzalo'){
                 //muestro quien me desafio
-
+                console.log("challenged by ", data.data.username)
+                
                 //manda la respuesta al desafio
                 connection.sendUTF(Challenged.challenged(data.data.board_id));
-                }
-
+                
                 break;
 
             case 'your_turn':
                 
-                //envio el movimiento que realizo
-                connection.sendUTF(my_turn(data.data));
+                connection.sendUTF(my_turn(data.data))
                 break;
 
             case'gameover':
@@ -77,10 +73,12 @@ ws.on('connect', function (connection) {
                     "\n Black user: ", data.data.black_username, ", with score: ", data.data.black_score, '\n'            
                 )
                 break;
+            
+            case 'response_error':
+                console.log("\nresponse error")
 
             default:
-                console.log("response error, timeout exception")
-                // console.log(data);
+                console.log(data);
                 break;
         }
     })
@@ -90,3 +88,4 @@ ws.on('connect', function (connection) {
 ws.on('connectFailed', (err) => {
     console.log("Connection error: ", err)
 })
+
