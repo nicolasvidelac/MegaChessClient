@@ -59,7 +59,7 @@ function moveWhite(matriz, depth = deepness) {
     }
 
     // busco cual de los resultados es el que tiene el mayor valor.
-    let max = -10000; 
+    let max = -Infinity; 
 
     possibleMovementsWhite.forEach(pm => {
         if (pm.value >= max){
@@ -71,24 +71,31 @@ function moveWhite(matriz, depth = deepness) {
     let index = 0;
     index = possibleMovementsWhite.findIndex( s => s.value == max);
 
-    try {
-        let result = {
+    let result;
+    if (index != -1){
+
+        result = {
             value: possibleMovementsWhite[index].value,
             from_row: possibleMovementsWhite[index].from_row,
             from_col: possibleMovementsWhite[index].from_col,
             to_row: possibleMovementsWhite[index].to_row,
             to_col: possibleMovementsWhite[index].to_col,
         }
+
+    } else {
+        console.table(matriz)
         
-        // devuelvo los datos desde y hacia del movimiento de mayor valor
-        return result;
-        
-    } catch (error) {
-        console.log("error: ", error)
-        console.log("index: ",index)
-        console.log("array: ", possibleMovementsWhite)
+        result = {
+            value: -Infinity,
+            from_row: 0,
+            from_col: 0,
+            to_row: 0,
+            to_col: 0
+        }
     }
 
+    // devuelvo los datos desde y hacia del movimiento de mayor valor
+    return result;
     
     function WhiteHorseMoves(matriz, row, col){
         
@@ -956,7 +963,7 @@ function moveBlack(matriz, depth = deepness) {
     }
 
     // busco cual de los resultados es el que tiene el mayor valor.
-    let max = -100000; 
+    let max = -Infinity; 
 
     possibleMovementsBlack.forEach(pm => {
         if (pm.value >= max){
@@ -965,15 +972,29 @@ function moveBlack(matriz, depth = deepness) {
     })
 
     // guardo el indice de ese maximo
-    let index = 0;
-    index = possibleMovementsBlack.findIndex( s => s.value == max);
+    let index = possibleMovementsBlack.findIndex( s => s.value == max);
+    
+    let result;
+    if (index != -1){
 
-    let result = {
-        value: possibleMovementsBlack[index].value,
-        from_row: possibleMovementsBlack[index].from_row,
-        from_col: possibleMovementsBlack[index].from_col,
-        to_row: possibleMovementsBlack[index].to_row,
-        to_col: possibleMovementsBlack[index].to_col,
+        result = {
+            value: possibleMovementsBlack[index].value,
+            from_row: possibleMovementsBlack[index].from_row,
+            from_col: possibleMovementsBlack[index].from_col,
+            to_row: possibleMovementsBlack[index].to_row,
+            to_col: possibleMovementsBlack[index].to_col,
+        }
+
+    } else {
+        console.table(matriz)
+
+        result = {
+            value: -Infinity,
+            from_row: 0,
+            from_col: 0,
+            to_row: 0,
+            to_col: 0
+        }
     }
     
     // devuelvo los datos desde y hacia del movimiento de mayor valor
