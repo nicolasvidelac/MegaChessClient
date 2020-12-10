@@ -1,17 +1,12 @@
 const { letterToName} = require("../enums/letterToName");
 const { blackPieces, whitePieces } = require("../enums/pieces");
 const { whitePlaceWeight, blackPlaceWeight } = require("../enums/placeWeight");
-const { valuePieces} = require("../enums/valuePieces");
-const { weightPieces} = require("../enums/weightPieces");
+const { emptySpacesParam, depthParam } = require("../enums/searchParams");
+const { valuePieces } = require("../enums/valuePieces");
+const { weightPieces } = require("../enums/weightPieces");
 const { movePiece } = require("../utilities/movePiece");
 
-//nivel de profundidad con la que itero los resultados
-let deepness = 3;
-
-//cantidad de lugares vacios que pueden encontrar y continuar buscando las reinas, alfiles y torres
-let stopMeter = 2;
-
-function moveWhite(matriz, depth = deepness) {
+function moveWhite(matriz, depth = depthParam) {
 
     //si depth es 0, es porque se llego al fin del bucle 
     if(depth == 0){
@@ -83,8 +78,11 @@ function moveWhite(matriz, depth = deepness) {
         }
 
     } else {
-        console.table(matriz)
-        
+        if(depth == depthParam){
+            console.table(matriz)
+        }
+
+        // no hay movimientos posibles para hacer
         result = {
             value: -Infinity,
             from_row: 0,
@@ -206,7 +204,7 @@ function moveWhite(matriz, depth = deepness) {
         
         loop:
         //* busca la primera pieza que encuentra adelante
-        for (let i = row - 1, stop = stopMeter; i > 0; i--){
+        for (let i = row - 1, stop = emptySpacesParam; i > 0; i--){
 
             //busco una negra para comer
             if(blackPieces.includes(matriz[i][col])){
@@ -246,7 +244,7 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza que encuentra atras
         loop:
-        for (let i = row+1, stop = stopMeter; i < 16; i++){
+        for (let i = row+1, stop = emptySpacesParam; i < 16; i++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][col])){
@@ -285,7 +283,7 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza a la izquierda
         loop:
-        for (let j = col - 1, stop = stopMeter; j > 0; j--){
+        for (let j = col - 1, stop = emptySpacesParam; j > 0; j--){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[row][j])){
@@ -324,7 +322,7 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza a la derecha
         loop:
-        for (let j = col + 1, stop = stopMeter; j < 16; j++){
+        for (let j = col + 1, stop = emptySpacesParam; j < 16; j++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[row][j])){
@@ -367,7 +365,7 @@ function moveWhite(matriz, depth = deepness) {
         
         //* busca la primera pieza en diagonal superior izquierda
         loop:
-        for (let i = row - 1, j = col - 1, stop = stopMeter; i > 0 && j > 0; i--, j--){
+        for (let i = row - 1, j = col - 1, stop = emptySpacesParam; i > 0 && j > 0; i--, j--){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
@@ -406,7 +404,7 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal superior derecha
         loop:
-        for (let i = row - 1, j = col + 1, stop = stopMeter; i > 0 && j < 16; i--, j++){
+        for (let i = row - 1, j = col + 1, stop = emptySpacesParam; i > 0 && j < 16; i--, j++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
@@ -445,7 +443,7 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal inferior izquierda"
         loop: 
-        for (let i = row + 1, j = col - 1, stop = stopMeter; i < 16 && j > 0; i++, j--){
+        for (let i = row + 1, j = col - 1, stop = emptySpacesParam; i < 16 && j > 0; i++, j--){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
@@ -484,7 +482,7 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal inferior derecha
         loop:
-        for (let i = row + 1, j = col + 1, stop = stopMeter; i < 16 && j < 16; i++, j++){
+        for (let i = row + 1, j = col + 1, stop = emptySpacesParam; i < 16 && j < 16; i++, j++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
@@ -527,7 +525,7 @@ function moveWhite(matriz, depth = deepness) {
 
         loop:
         //* busca la primera pieza que encuentra adelante
-        for (let i = row - 1, stop = stopMeter; i > 0; i--){
+        for (let i = row - 1, stop = emptySpacesParam; i > 0; i--){
 
             //busco una negra para comer
             if(blackPieces.includes(matriz[i][col])){
@@ -567,7 +565,7 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza que encuentra atras
         loop:
-        for (let i = row+1, stop = stopMeter; i < 16; i++){
+        for (let i = row+1, stop = emptySpacesParam; i < 16; i++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][col])){
@@ -606,7 +604,7 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza a la izquierda
         loop:
-        for (let j = col - 1, stop = stopMeter; j > 0; j--){
+        for (let j = col - 1, stop = emptySpacesParam; j > 0; j--){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[row][j])){
@@ -645,7 +643,7 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza a la derecha
         loop:
-        for (let j = col + 1, stop = stopMeter; j < 16; j++){
+        for (let j = col + 1, stop = emptySpacesParam; j < 16; j++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[row][j])){
@@ -684,7 +682,7 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal superior izquierda
         loop:
-        for (let i = row - 1, j = col - 1, stop = stopMeter; i > 0 && j > 0; i--, j--){
+        for (let i = row - 1, j = col - 1, stop = emptySpacesParam; i > 0 && j > 0; i--, j--){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
@@ -723,7 +721,7 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal superior derecha
         loop:
-        for (let i = row - 1, j = col + 1, stop = stopMeter; i > 0 && j < 16; i--, j++){
+        for (let i = row - 1, j = col + 1, stop = emptySpacesParam; i > 0 && j < 16; i--, j++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
@@ -762,7 +760,7 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal inferior izquierda"
         loop: 
-        for (let i = row + 1, j = col - 1, stop = stopMeter; i < 16 && j > 0; i++, j--){
+        for (let i = row + 1, j = col - 1, stop = emptySpacesParam; i < 16 && j > 0; i++, j--){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
@@ -801,7 +799,7 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal inferior derecha
         loop:
-        for (let i = row + 1, j = col + 1, stop = stopMeter; i < 16 && j < 16; i++, j++){
+        for (let i = row + 1, j = col + 1, stop = emptySpacesParam; i < 16 && j < 16; i++, j++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
@@ -915,7 +913,7 @@ function moveWhite(matriz, depth = deepness) {
     }
 }
 
-function moveBlack(matriz, depth = deepness) {
+function moveBlack(matriz, depth = depthParam) {
 
     //si depth es 0, es porque se llego al fin del bucle 
     if(depth == 0){
@@ -986,8 +984,11 @@ function moveBlack(matriz, depth = deepness) {
         }
 
     } else {
-        console.table(matriz)
-
+        if(depth == depthParam){
+            console.table(matriz)
+        }
+        
+        // no hay movimientos posibles para hacer
         result = {
             value: -Infinity,
             from_row: 0,
@@ -1107,7 +1108,7 @@ function moveBlack(matriz, depth = deepness) {
     function blackRookMoves(matriz, row, col){
         
         //* busca la primera pieza que encuentra adelante
-        for (let i = row + 1, stop = stopMeter ; i < 16; i++){
+        for (let i = row + 1, stop = emptySpacesParam ; i < 16; i++){
         
             // si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][col])){
@@ -1145,7 +1146,7 @@ function moveBlack(matriz, depth = deepness) {
         } 
 
         //* busca la primera pieza que encuentra atras
-        for (let i = row-1, stop = stopMeter; i > 0; i--){
+        for (let i = row-1, stop = emptySpacesParam; i > 0; i--){
 
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][col])){
@@ -1184,7 +1185,7 @@ function moveBlack(matriz, depth = deepness) {
         }
         
         //* busca la primera pieza a la derecha
-        for (let j = col-1, stop = stopMeter; j > 0; j--){
+        for (let j = col-1, stop = emptySpacesParam; j > 0; j--){
 
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[row][j])){
@@ -1222,7 +1223,7 @@ function moveBlack(matriz, depth = deepness) {
         }
 
         //* busca la primera pieza a la izquierda
-        for (let j = col+1, stop = stopMeter; j < 16; j++){
+        for (let j = col+1, stop = emptySpacesParam; j < 16; j++){
 
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[row][j])){
@@ -1263,7 +1264,7 @@ function moveBlack(matriz, depth = deepness) {
     function blackBishopMoves(matriz, row, col){
         //* busca la primera pieza en diagonal inferior derecha
         loop:
-        for (let i = row-1, j = col -1, stop = stopMeter; i > 0 && j > 0; i--, j--){
+        for (let i = row-1, j = col -1, stop = emptySpacesParam; i > 0 && j > 0; i--, j--){
         
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
@@ -1303,7 +1304,7 @@ function moveBlack(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal inferior izquierda
         loop:
-        for (let i = row-1, j = col+1, stop = stopMeter; i > 0 && j < 16; i--, j++){
+        for (let i = row-1, j = col+1, stop = emptySpacesParam; i > 0 && j < 16; i--, j++){
             
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
@@ -1343,7 +1344,7 @@ function moveBlack(matriz, depth = deepness) {
     
         //* busca la primera pieza en diagonal superior derecha"
         loop: 
-        for (let i = row+1, j = col-1, stop = stopMeter; i < 16 && j > 0; i++, j--){
+        for (let i = row+1, j = col-1, stop = emptySpacesParam; i < 16 && j > 0; i++, j--){
             
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
@@ -1382,7 +1383,7 @@ function moveBlack(matriz, depth = deepness) {
     
         //* busca la primera pieza en diagonal superior izquierda
         loop:
-        for (let i = row+1, j = col+1, stop = stopMeter; i < 16 && j < 16; i++, j++){
+        for (let i = row+1, j = col+1, stop = emptySpacesParam; i < 16 && j < 16; i++, j++){
     
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
@@ -1424,7 +1425,7 @@ function moveBlack(matriz, depth = deepness) {
     function blackQueenMoves(matriz, row, col){
 
         //* busca la primera pieza que encuentra adelante
-        for (let i = row + 1, stop = stopMeter ; i < 16; i++){
+        for (let i = row + 1, stop = emptySpacesParam ; i < 16; i++){
     
             // si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][col])){
@@ -1462,7 +1463,7 @@ function moveBlack(matriz, depth = deepness) {
         } 
 
         //* busca la primera pieza que encuentra atras
-        for (let i = row-1, stop = stopMeter; i > 0; i--){
+        for (let i = row-1, stop = emptySpacesParam; i > 0; i--){
     
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][col])){
@@ -1501,7 +1502,7 @@ function moveBlack(matriz, depth = deepness) {
         }
         
         //* busca la primera pieza a la derecha
-        for (let j = col-1, stop = stopMeter; j > 0; j--){
+        for (let j = col-1, stop = emptySpacesParam; j > 0; j--){
     
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[row][j])){
@@ -1539,7 +1540,7 @@ function moveBlack(matriz, depth = deepness) {
         }
     
         //* busca la primera pieza a la izquierda
-        for (let j = col+1, stop = stopMeter; j < 16; j++){
+        for (let j = col+1, stop = emptySpacesParam; j < 16; j++){
     
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[row][j])){
@@ -1578,7 +1579,7 @@ function moveBlack(matriz, depth = deepness) {
         
         //* busca la primera pieza en diagonal inferior derecha
         loop:
-        for (let i = row-1, j = col -1, stop = stopMeter; i > 0 && j > 0; i--, j--){
+        for (let i = row-1, j = col -1, stop = emptySpacesParam; i > 0 && j > 0; i--, j--){
        
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
@@ -1618,7 +1619,7 @@ function moveBlack(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal inferior izquierda
         loop:
-        for (let i = row-1, j = col+1, stop = stopMeter; i > 0 && j < 16; i--, j++){
+        for (let i = row-1, j = col+1, stop = emptySpacesParam; i > 0 && j < 16; i--, j++){
             
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
@@ -1658,7 +1659,7 @@ function moveBlack(matriz, depth = deepness) {
     
         //* busca la primera pieza en diagonal superior derecha"
         loop: 
-        for (let i = row+1, j = col-1, stop = stopMeter; i < 16 && j > 0; i++, j--){
+        for (let i = row+1, j = col-1, stop = emptySpacesParam; i < 16 && j > 0; i++, j--){
             
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
@@ -1697,7 +1698,7 @@ function moveBlack(matriz, depth = deepness) {
     
         //* busca la primera pieza en diagonal superior izquierda
         loop:
-        for (let i = row+1, j = col+1, stop = stopMeter; i < 16 && j < 16; i++, j++){
+        for (let i = row+1, j = col+1, stop = emptySpacesParam; i < 16 && j < 16; i++, j++){
     
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){

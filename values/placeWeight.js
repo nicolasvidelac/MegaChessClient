@@ -1,4 +1,4 @@
-// valor de cada posicion para cada pieza 
+// valor extra para cada posicion para cada pieza 
 const whitePlaceWeight = {
     horseEval :  [
         [-5.0, -5.0, -4.0, -4.0, -3.0, -3.0, -3.0, -3.0, -3.0, -3.0, -3.0, -3.0, -4.0, -4.0, -5.0, -5.0],
