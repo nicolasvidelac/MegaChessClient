@@ -1,9 +1,9 @@
-const { letterToName} = require("../enums/letterToName");
-const { blackPieces, whitePieces } = require("../enums/pieces");
-const { whitePlaceWeight, blackPlaceWeight } = require("../enums/placeWeight");
-const { emptySpacesParam, depthParam } = require("../enums/searchParams");
-const { valuePieces } = require("../enums/valuePieces");
-const { weightPieces } = require("../enums/weightPieces");
+const { letterToName } = require("../values/letterToName");
+const { blackPieces, whitePieces } = require("../values/pieces");
+const { whitePlaceWeight, blackPlaceWeight } = require("../values/placeWeight");
+const { emptySpacesParam, depthParam } = require("../values/searchParams");
+const { valuePieces } = require("../values/valuePieces");
+const { weightPieces } = require("../values/weightPieces");
 const { movePiece } = require("../utilities/movePiece");
 
 function moveWhite(matriz, depth = depthParam) {

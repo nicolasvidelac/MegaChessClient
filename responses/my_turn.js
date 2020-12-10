@@ -1,5 +1,5 @@
 const { moveBlack, moveWhite } = require('../algorithm/move');
-const { myUsername } = require('../enums/myUsername');
+const { myUsername } = require('../values/myUsername');
 const { makeMatriz } = require('../utilities/makeMatriz');
 
 exports.my_turn = (data) => {
