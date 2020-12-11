@@ -51,7 +51,7 @@ ws.on('connect', function (connection) {
                 //muestro quien me desafio
                 console.log("challenged by ", message.data.username)
                 
-                if(message.data.username != 'Julieta'){
+                if(message.data.username == 'nicolasvc' || message.data.username == 'EnzoC'){
                     //manda la respuesta al desafio
                     connection.sendUTF(Challenged.challenged(message.data.board_id));
                 }
