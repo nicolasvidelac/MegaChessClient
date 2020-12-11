@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node webSocket.js",
     "test": "jest",
-    "test:coveralls" : "jest --coverage && coveralls < coverage/lcov.info"
+    "test:coveralls": "jest --coverage && coveralls < coverage/lcov.info"
   },
   "keywords": [],
   "author": "",

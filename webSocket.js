@@ -2,7 +2,8 @@
 const Challenged = require('./responses/challenged');
 const fs = require('fs');
 const { my_turn } = require('./responses/my_turn');
-const { client } = require('websocket')
+const { client } = require('websocket');
+const { makeMatriz } = require('./utilities/makeMatriz');
 
 //lee mi authtoken de un archivo
 var authtoken = fs.readFileSync('authtoken.txt').toString();
@@ -28,17 +29,17 @@ ws.on('connect', function (connection) {
     })
 
     //accion cuando llega un mensaje
-    connection.on('message', (message) =>{
+    connection.on('message', (msg) =>{
 
         //convertimos el json que llega en un objeto legible
-        let data = JSON.parse(message.utf8Data);
+        let message = JSON.parse(msg.utf8Data);
 
         //lo que realizamos depende de la accion que haya llegado en el json
-        switch (data.event){
+        switch (message.event){
 
             case 'update_user_list':
                 if (count == 0){
-                    console.log(data.data.users_list);
+                    console.log(message.data.users_list);
                     count = 3
                 } else {
                     count --;
@@ -47,18 +48,15 @@ ws.on('connect', function (connection) {
                 break;
 
             case 'ask_challenge':
-                
                 //muestro quien me desafio
-                console.log("challenged by ", data.data.username)
-
+                console.log("challenged by ", message.data.username)
+                
                 //manda la respuesta al desafio
-                connection.sendUTF(Challenged.challenged(data.data.board_id));
-                break;
+                connection.sendUTF(Challenged.challenged(message.data.board_id));
+            break;
 
             case 'your_turn':
-                
-                //envio el movimiento que realizo
-                connection.sendUTF(my_turn(data.data));
+                connection.sendUTF(my_turn(message.data))
                 break;
 
             case'gameover':
@@ -66,17 +64,19 @@ ws.on('connect', function (connection) {
                 console.log
                 (
                     "\nEnd of Match - Winner:", 
-                    Number(data.data.white_score) > Number(data.data.black_score) ? 
-                        `${data.data.white_username} with whites\n` : `${data.data.black_username} with blacks\n`,
+                    Number(message.data.white_score) > Number(message.data.black_score) ? 
+                        `${message.data.white_username} with whites\n` : `${message.data.black_username} with blacks\n`,
                         
-                    "White user: ", data.data.white_username, ", with score: ", data.data.white_score,
-                    "\n Black user: ", data.data.black_username, ", with score: ", data.data.black_score, '\n'            
+                    "White user: ", message.data.white_username, ", with score: ", message.data.white_score,
+                    "\n Black user: ", message.data.black_username, ", with score: ", message.data.black_score, '\n'            
                 )
                 break;
+            
+            case 'response_error':
+                console.log("\nresponse error")
 
             default:
-                console.log("response error, timeout exception")
-                // console.log(data);
+                console.log(message);
                 break;
         }
     })
@@ -86,3 +86,4 @@ ws.on('connect', function (connection) {
 ws.on('connectFailed', (err) => {
     console.log("Connection error: ", err)
 })
+

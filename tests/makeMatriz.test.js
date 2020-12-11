@@ -137,6 +137,6 @@ test('should throw error', () => {
 
   expect(() => {
     makeMatriz(board)
-  }).toThrowError('string enviado incompleto');
+  }).toThrowError('string board incompleto');
 });
 

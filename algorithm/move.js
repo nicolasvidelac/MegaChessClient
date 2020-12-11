@@ -1,17 +1,12 @@
-const { letterToName} = require("../enums/letterToName");
-const { blackPieces, whitePieces } = require("../enums/pieces");
-const { whitePlaceWeight, blackPlaceWeight } = require("../enums/placeWeight");
-const { valuePieces} = require("../enums/valuePieces");
-const { weightPieces} = require("../enums/weightPieces");
+const { letterToName } = require("../values/letterToName");
+const { blackPieces, whitePieces } = require("../values/pieces");
+const { whitePlaceWeight, blackPlaceWeight } = require("../values/placeWeight");
+const { emptySpacesParam, depthParam } = require("../values/searchParams");
+const { whiteValuePieces, blackValuePieces } = require("../values/valuePieces");
+const { weightPieces } = require("../values/weightPieces");
 const { movePiece } = require("../utilities/movePiece");
 
-//nivel de profundidad con la que itero los resultados
-let deepness = 3;
-
-//cantidad de lugares vacios que pueden encontrar y continuar buscando las reinas, alfiles y torres
-let stopMeter = 3;
-
-function moveWhite(matriz, depth = deepness) {
+function moveWhite(matriz, depth = depthParam) {
 
     //si depth es 0, es porque se llego al fin del bucle 
     if(depth == 0){
@@ -23,7 +18,7 @@ function moveWhite(matriz, depth = deepness) {
     
     //itero sobre toda la matriz buscando mis piezas 
     //y ejecuto la funcion correspondiente cuando encuentro una pieza
-     for( let col = 0; col < 16; col++ ){
+    for( let col = 0; col < 16; col++ ){
         for( let row = 15; row > 0; row-- ){
 
             switch (matriz[row][col]){
@@ -59,7 +54,7 @@ function moveWhite(matriz, depth = deepness) {
     }
 
     // busco cual de los resultados es el que tiene el mayor valor.
-    let max = -10000; 
+    let max = -Infinity; 
 
     possibleMovementsWhite.forEach(pm => {
         if (pm.value >= max){
@@ -71,12 +66,30 @@ function moveWhite(matriz, depth = deepness) {
     let index = 0;
     index = possibleMovementsWhite.findIndex( s => s.value == max);
 
-    let result = {
-        value: possibleMovementsWhite[index].value,
-        from_row: possibleMovementsWhite[index].from_row,
-        from_col: possibleMovementsWhite[index].from_col,
-        to_row: possibleMovementsWhite[index].to_row,
-        to_col: possibleMovementsWhite[index].to_col,
+    let result;
+    if (index != -1){
+
+        result = {
+            value: possibleMovementsWhite[index].value,
+            from_row: possibleMovementsWhite[index].from_row,
+            from_col: possibleMovementsWhite[index].from_col,
+            to_row: possibleMovementsWhite[index].to_row,
+            to_col: possibleMovementsWhite[index].to_col,
+        }
+
+    } else {
+        if(depth == depthParam){
+            console.table(matriz)
+        }
+
+        // no hay movimientos posibles para hacer
+        result = {
+            value: -Infinity,
+            from_row: 0,
+            from_col: 0,
+            to_row: 0,
+            to_col: 0
+        }
     }
 
     // devuelvo los datos desde y hacia del movimiento de mayor valor
@@ -86,11 +99,11 @@ function moveWhite(matriz, depth = deepness) {
         
         for (let i = -2; i < 3; i += 4) {
             for (let j = -1; j < 2; j += 2) {
-                if ( 1 < row && row < 14 && 0 < col && col < 15 ) {
+                if( 0 <= row+i && row+i <= 15 && 0 <= col+j && col+j <= 15 ){
                     if(blackPieces.includes(matriz[row+i][col+j])){
                         possibleMovementsWhite.push(
                             {
-                                value: (valuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
+                                value: (whiteValuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
                                 from_row: row,
                                 from_col: col,
                                 to_row: row+i,
@@ -102,7 +115,7 @@ function moveWhite(matriz, depth = deepness) {
                     else if(matriz[row+i][col+j] == ' '){
                         possibleMovementsWhite.push(
                             {
-                                value: valuePieces.Horse + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
+                                value: whiteValuePieces.Horse + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
                                 from_row: row,
                                 from_col: col,
                                 to_row: row+i,
@@ -116,12 +129,11 @@ function moveWhite(matriz, depth = deepness) {
 
         for (let i = -1; i < 2; i += 2) {
             for (let j = -2; j < 3; j += 4) {
-
-                if( 0 < row && row < 14 && 1 < col && col < 15 ){
+                if( 0 <= row+i && row+i <= 15 && 0 <= col+j && col+j <= 15 ){
                     if(blackPieces.includes(matriz[row+i][col+j])){
                         possibleMovementsWhite.push(
                             {
-                                value: (valuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
+                                value: (whiteValuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
                                 from_row: row,
                                 from_col: col,
                                 to_row: row+i,
@@ -133,7 +145,7 @@ function moveWhite(matriz, depth = deepness) {
                     else if(matriz[row+i][col+j] == ' '){
                         possibleMovementsWhite.push(
                             {
-                                value: valuePieces.Horse + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
+                                value: whiteValuePieces.Horse + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
                                 from_row: row,
                                 from_col: col,
                                 to_row: row+i,
@@ -161,7 +173,7 @@ function moveWhite(matriz, depth = deepness) {
                 if(blackPieces.includes(matriz[i][j])){
                     possibleMovementsWhite.push(
                         {
-                            value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.kingEval[i][j],
+                            value: ((whiteValuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.kingEval[i][j],
                             from_row: row,
                             from_col: col,
                             to_row: i,
@@ -175,7 +187,7 @@ function moveWhite(matriz, depth = deepness) {
                 else if(matriz[i][j] == ' '){
                     possibleMovementsWhite.push(
                         {
-                            value: valuePieces.King - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.kingEval[i][j],
+                            value: whiteValuePieces.King - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.kingEval[i][j],
                             from_row: row,
                             from_col: col,
                             to_row: i,
@@ -191,13 +203,13 @@ function moveWhite(matriz, depth = deepness) {
         
         loop:
         //* busca la primera pieza que encuentra adelante
-        for (let i = row - 1, stop = stopMeter; i > 0; i--){
+        for (let i = row - 1, stop = emptySpacesParam; i > 0; i--){
 
             //busco una negra para comer
             if(blackPieces.includes(matriz[i][col])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value + whitePlaceWeight.rookEval[i][col],
+                        value: ((whiteValuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value + whitePlaceWeight.rookEval[i][col],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -211,7 +223,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[i][col] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Rook + whitePlaceWeight.rookEval[i][col] - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
+                        value: whiteValuePieces.Rook + whitePlaceWeight.rookEval[i][col] - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -231,13 +243,13 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza que encuentra atras
         loop:
-        for (let i = row+1, stop = stopMeter; i < 16; i++){
+        for (let i = row+1, stop = emptySpacesParam; i < 16; i++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][col])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, i, col), depth-1).value + whitePlaceWeight.rookEval[i][col],
+                        value: ((whiteValuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, i, col), depth-1).value + whitePlaceWeight.rookEval[i][col],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -251,7 +263,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[i][col] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Rook + whitePlaceWeight.rookEval[i][col] - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
+                        value: whiteValuePieces.Rook + whitePlaceWeight.rookEval[i][col] - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -270,13 +282,13 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza a la izquierda
         loop:
-        for (let j = col - 1, stop = stopMeter; j > 0; j--){
+        for (let j = col - 1, stop = emptySpacesParam; j > 0; j--){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[row][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value + whitePlaceWeight.rookEval[row][j],
+                        value: ((whiteValuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value + whitePlaceWeight.rookEval[row][j],
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -290,7 +302,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[row][j] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Rook + whitePlaceWeight.rookEval[row][j] - moveBlack( movePiece(matriz, row, col, row, j), depth-1).value,
+                        value: whiteValuePieces.Rook + whitePlaceWeight.rookEval[row][j] - moveBlack( movePiece(matriz, row, col, row, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -309,13 +321,13 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza a la derecha
         loop:
-        for (let j = col + 1, stop = stopMeter; j < 16; j++){
+        for (let j = col + 1, stop = emptySpacesParam; j < 16; j++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[row][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value + whitePlaceWeight.rookEval[row][j],
+                        value: ((whiteValuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value + whitePlaceWeight.rookEval[row][j],
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -329,7 +341,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[row][j] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Rook + whitePlaceWeight.rookEval[row][j] - moveBlack( movePiece(matriz, row, col, row, j), depth-1).value,
+                        value: whiteValuePieces.Rook + whitePlaceWeight.rookEval[row][j] - moveBlack( movePiece(matriz, row, col, row, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -352,13 +364,13 @@ function moveWhite(matriz, depth = deepness) {
         
         //* busca la primera pieza en diagonal superior izquierda
         loop:
-        for (let i = row - 1, j = col - 1, stop = stopMeter; i > 0 && j > 0; i--, j--){
+        for (let i = row - 1, j = col - 1, stop = emptySpacesParam; i > 0 && j > 0; i--, j--){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces[letterToName[matriz[i][j]]] * weightPieces.eating - moveBlack( movePiece( matriz, row, col, i, j), depth-1).value + whitePlaceWeight.bishopEval[i][j],
+                        value: whiteValuePieces[letterToName[matriz[i][j]]] * weightPieces.eating - moveBlack( movePiece( matriz, row, col, i, j), depth-1).value + whitePlaceWeight.bishopEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -372,7 +384,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Bishop + whitePlaceWeight.bishopEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: whiteValuePieces.Bishop + whitePlaceWeight.bishopEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -391,13 +403,13 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal superior derecha
         loop:
-        for (let i = row - 1, j = col + 1, stop = stopMeter; i > 0 && j < 16; i--, j++){
+        for (let i = row - 1, j = col + 1, stop = emptySpacesParam; i > 0 && j < 16; i--, j++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating)  - moveBlack( movePiece( matriz, row, col, i+1, col), depth-1).value + whitePlaceWeight.bishopEval[i][j],
+                        value: ((whiteValuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating)  - moveBlack( movePiece( matriz, row, col, i+1, col), depth-1).value + whitePlaceWeight.bishopEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -411,7 +423,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Bishop + whitePlaceWeight.bishopEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: whiteValuePieces.Bishop + whitePlaceWeight.bishopEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -430,13 +442,13 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal inferior izquierda"
         loop: 
-        for (let i = row + 1, j = col - 1, stop = stopMeter; i < 16 && j > 0; i++, j--){
+        for (let i = row + 1, j = col - 1, stop = emptySpacesParam; i < 16 && j > 0; i++, j--){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.bishopEval[i][j],
+                        value: ((whiteValuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.bishopEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -450,7 +462,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Bishop + whitePlaceWeight.bishopEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: whiteValuePieces.Bishop + whitePlaceWeight.bishopEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -469,13 +481,13 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal inferior derecha
         loop:
-        for (let i = row + 1, j = col + 1, stop = stopMeter; i < 16 && j < 16; i++, j++){
+        for (let i = row + 1, j = col + 1, stop = emptySpacesParam; i < 16 && j < 16; i++, j++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.bishopEval[i][j],
+                        value: ((whiteValuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.bishopEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -489,7 +501,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Bishop + whitePlaceWeight.bishopEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: whiteValuePieces.Bishop + whitePlaceWeight.bishopEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -512,13 +524,13 @@ function moveWhite(matriz, depth = deepness) {
 
         loop:
         //* busca la primera pieza que encuentra adelante
-        for (let i = row - 1, stop = stopMeter; i > 0; i--){
+        for (let i = row - 1, stop = emptySpacesParam; i > 0; i--){
 
             //busco una negra para comer
             if(blackPieces.includes(matriz[i][col])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value + whitePlaceWeight.queenEval[i][col],
+                        value: ((whiteValuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value + whitePlaceWeight.queenEval[i][col],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -532,7 +544,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[i][col] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Queen + whitePlaceWeight.queenEval[i][col] - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
+                        value: whiteValuePieces.Queen + whitePlaceWeight.queenEval[i][col] - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -552,13 +564,13 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza que encuentra atras
         loop:
-        for (let i = row+1, stop = stopMeter; i < 16; i++){
+        for (let i = row+1, stop = emptySpacesParam; i < 16; i++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][col])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, i, col), depth-1).value + whitePlaceWeight.queenEval[i][col],
+                        value: ((whiteValuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, i, col), depth-1).value + whitePlaceWeight.queenEval[i][col],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -572,7 +584,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[i][col] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Queen + whitePlaceWeight.queenEval[i][col] - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
+                        value: whiteValuePieces.Queen + whitePlaceWeight.queenEval[i][col] - moveBlack( movePiece(matriz, row, col, i, col), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -591,13 +603,13 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza a la izquierda
         loop:
-        for (let j = col - 1, stop = stopMeter; j > 0; j--){
+        for (let j = col - 1, stop = emptySpacesParam; j > 0; j--){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[row][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value + whitePlaceWeight.queenEval[row][j],
+                        value: ((whiteValuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value + whitePlaceWeight.queenEval[row][j],
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -611,7 +623,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[row][j] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Queen + whitePlaceWeight.queenEval[row][j] - moveBlack( movePiece(matriz, row, col, row, j), depth-1).value,
+                        value: whiteValuePieces.Queen + whitePlaceWeight.queenEval[row][j] - moveBlack( movePiece(matriz, row, col, row, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -630,13 +642,13 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza a la derecha
         loop:
-        for (let j = col + 1, stop = stopMeter; j < 16; j++){
+        for (let j = col + 1, stop = emptySpacesParam; j < 16; j++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[row][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value + whitePlaceWeight.queenEval[row][j],
+                        value: ((whiteValuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveBlack( movePiece( matriz, row, col, row, j), depth-1).value + whitePlaceWeight.queenEval[row][j],
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -650,7 +662,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[row][j] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Queen + whitePlaceWeight.queenEval[row][j] - moveBlack( movePiece(matriz, row, col, row, j), depth-1).value,
+                        value: whiteValuePieces.Queen + whitePlaceWeight.queenEval[row][j] - moveBlack( movePiece(matriz, row, col, row, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -669,13 +681,13 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal superior izquierda
         loop:
-        for (let i = row - 1, j = col - 1, stop = stopMeter; i > 0 && j > 0; i--, j--){
+        for (let i = row - 1, j = col - 1, stop = emptySpacesParam; i > 0 && j > 0; i--, j--){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces[letterToName[matriz[i][j]]] * weightPieces.eating - moveBlack( movePiece( matriz, row, col, i, j), depth-1).value + whitePlaceWeight.queenEval[i][j],
+                        value: whiteValuePieces[letterToName[matriz[i][j]]] * weightPieces.eating - moveBlack( movePiece( matriz, row, col, i, j), depth-1).value + whitePlaceWeight.queenEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -689,7 +701,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Queen + whitePlaceWeight.queenEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: whiteValuePieces.Queen + whitePlaceWeight.queenEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -708,13 +720,13 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal superior derecha
         loop:
-        for (let i = row - 1, j = col + 1, stop = stopMeter; i > 0 && j < 16; i--, j++){
+        for (let i = row - 1, j = col + 1, stop = emptySpacesParam; i > 0 && j < 16; i--, j++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating)  - moveBlack( movePiece( matriz, row, col, i+1, col), depth-1).value + whitePlaceWeight.queenEval[i][j],
+                        value: ((whiteValuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating)  - moveBlack( movePiece( matriz, row, col, i+1, col), depth-1).value + whitePlaceWeight.queenEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -728,7 +740,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Queen + whitePlaceWeight.queenEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: whiteValuePieces.Queen + whitePlaceWeight.queenEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -747,13 +759,13 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal inferior izquierda"
         loop: 
-        for (let i = row + 1, j = col - 1, stop = stopMeter; i < 16 && j > 0; i++, j--){
+        for (let i = row + 1, j = col - 1, stop = emptySpacesParam; i < 16 && j > 0; i++, j--){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.queenEval[i][j],
+                        value: ((whiteValuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.queenEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -767,7 +779,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Queen + whitePlaceWeight.queenEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: whiteValuePieces.Queen + whitePlaceWeight.queenEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -786,13 +798,13 @@ function moveWhite(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal inferior derecha
         loop:
-        for (let i = row + 1, j = col + 1, stop = stopMeter; i < 16 && j < 16; i++, j++){
+        for (let i = row + 1, j = col + 1, stop = emptySpacesParam; i < 16 && j < 16; i++, j++){
 
             //si encuentra una negra, la come
             if(blackPieces.includes(matriz[i][j])){
                 possibleMovementsWhite.push(
                     {
-                        value: ((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.queenEval[i][j],
+                        value: ((whiteValuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value + whitePlaceWeight.queenEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -806,7 +818,7 @@ function moveWhite(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsWhite.push(
                     {
-                        value: valuePieces.Queen + whitePlaceWeight.queenEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: whiteValuePieces.Queen + whitePlaceWeight.queenEval[i][j] - moveBlack( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -860,7 +872,7 @@ function moveWhite(matriz, depth = deepness) {
         if((blackPieces.includes(matriz[row-1][col+1]))){
             possibleMovementsWhite.push(
                 {
-                    value: whitePlaceWeight.pawnEval[row-1][col+1] + (valuePieces[letterToName[matriz[row-1][col+1]]]) * weightPieces.eating - moveBlack(movePiece(matriz, row, col, row-1, col+1), depth-1).value,
+                    value: whitePlaceWeight.pawnEval[row-1][col+1] + (whiteValuePieces[letterToName[matriz[row-1][col+1]]]) * weightPieces.eating - moveBlack(movePiece(matriz, row, col, row-1, col+1), depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row-1),
@@ -874,7 +886,7 @@ function moveWhite(matriz, depth = deepness) {
 
             possibleMovementsWhite.push(
                 {
-                    value: whitePlaceWeight.pawnEval[row-1][col-1] + (valuePieces[letterToName[matriz[row-1][col-1]]]) * weightPieces.eating - moveBlack(movePiece(matriz, row, col, row-1, col-1), depth-1).value,
+                    value: whitePlaceWeight.pawnEval[row-1][col-1] + (whiteValuePieces[letterToName[matriz[row-1][col-1]]]) * weightPieces.eating - moveBlack(movePiece(matriz, row, col, row-1, col-1), depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row-1),
@@ -900,7 +912,7 @@ function moveWhite(matriz, depth = deepness) {
     }
 }
 
-function moveBlack(matriz, depth = deepness) {
+function moveBlack(matriz, depth = depthParam) {
 
     //si depth es 0, es porque se llego al fin del bucle 
     if(depth == 0){
@@ -948,7 +960,7 @@ function moveBlack(matriz, depth = deepness) {
     }
 
     // busco cual de los resultados es el que tiene el mayor valor.
-    let max = -100000; 
+    let max = -Infinity; 
 
     possibleMovementsBlack.forEach(pm => {
         if (pm.value >= max){
@@ -957,15 +969,32 @@ function moveBlack(matriz, depth = deepness) {
     })
 
     // guardo el indice de ese maximo
-    let index = 0;
-    index = possibleMovementsBlack.findIndex( s => s.value == max);
+    let index = possibleMovementsBlack.findIndex( s => s.value == max);
+    
+    let result;
+    if (index != -1){
 
-    let result = {
-        value: possibleMovementsBlack[index].value,
-        from_row: possibleMovementsBlack[index].from_row,
-        from_col: possibleMovementsBlack[index].from_col,
-        to_row: possibleMovementsBlack[index].to_row,
-        to_col: possibleMovementsBlack[index].to_col,
+        result = {
+            value: possibleMovementsBlack[index].value,
+            from_row: possibleMovementsBlack[index].from_row,
+            from_col: possibleMovementsBlack[index].from_col,
+            to_row: possibleMovementsBlack[index].to_row,
+            to_col: possibleMovementsBlack[index].to_col,
+        }
+
+    } else {
+        if(depth == depthParam){
+            console.table(matriz)
+        }
+        
+        // no hay movimientos posibles para hacer
+        result = {
+            value: -Infinity,
+            from_row: 0,
+            from_col: 0,
+            to_row: 0,
+            to_col: 0
+        }
     }
     
     // devuelvo los datos desde y hacia del movimiento de mayor valor
@@ -975,11 +1004,11 @@ function moveBlack(matriz, depth = deepness) {
 
         for (let i = -2; i < 3; i += 4) {
             for (let j = -1; j < 2; j += 2) {
-                if ( 1 < row && row < 14 && 0 < col && col < 15 ) {
+                if( 0 <= row+i && row+i <= 15 && 0 <= col+j && col+j <= 15 ){
                     if(whitePieces.includes(matriz[row+i][col+j])){
                         possibleMovementsBlack.push(
                             {
-                                value: (valuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveWhite( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
+                                value: (blackValuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveWhite( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
                                 from_row: row,
                                 from_col: col,
                                 to_row: row+i,
@@ -991,7 +1020,7 @@ function moveBlack(matriz, depth = deepness) {
                     else if(matriz[row+i][col+j] == ' '){
                         possibleMovementsBlack.push(
                             {
-                                value: valuePieces.Horse + blackPlaceWeight.horseEval[row+i][col+j] - moveWhite( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
+                                value: blackValuePieces.Horse + blackPlaceWeight.horseEval[row+i][col+j] - moveWhite( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
                                 from_row: row,
                                 from_col: col,
                                 to_row: row+i,
@@ -1006,11 +1035,11 @@ function moveBlack(matriz, depth = deepness) {
         for (let i = -1; i < 2; i += 2) {
             for (let j = -2; j < 3; j += 4) {
 
-                if( 0 < row && row < 14 && 1 < col && col < 15 ){
+                if( 0 <= row+i && row+i <= 15 && 0 <= col+j && col+j <= 15 ){
                     if(whitePieces.includes(matriz[row+i][col+j])){
                         possibleMovementsBlack.push(
                             {
-                                value: (valuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
+                                value: (blackValuePieces[letterToName[matriz[row+i][col+j]]]) * weightPieces.eating + whitePlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value,
                                 from_row: row,
                                 from_col: col,
                                 to_row: row+i,
@@ -1022,7 +1051,7 @@ function moveBlack(matriz, depth = deepness) {
                     else if(matriz[row+i][col+j] == ' '){
                         possibleMovementsBlack.push(
                             {
-                                value: valuePieces.Horse + blackPlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
+                                value: blackValuePieces.Horse + blackPlaceWeight.horseEval[row+i][col+j] - moveBlack( movePiece(matriz, row, col, row+i, col+j), depth-1).value ,
                                 from_row: row,
                                 from_col: col,
                                 to_row: row+i,
@@ -1050,7 +1079,7 @@ function moveBlack(matriz, depth = deepness) {
                 if(whitePieces.includes(matriz[i][j])){
                     possibleMovementsBlack.push(
                         {
-                            value: (((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.kingEval[i][j],
+                            value: (((blackValuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.kingEval[i][j],
                             from_row: row,
                             from_col: col,
                             to_row: i,
@@ -1063,7 +1092,7 @@ function moveBlack(matriz, depth = deepness) {
                 else if(matriz[i][j] == ' '){
                     possibleMovementsBlack.push(
                         {
-                            value:( valuePieces.King - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.kingEval[i][j],
+                            value:( blackValuePieces.King - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.kingEval[i][j],
                             from_row: row,
                             from_col: col,
                             to_row: i,
@@ -1078,13 +1107,13 @@ function moveBlack(matriz, depth = deepness) {
     function blackRookMoves(matriz, row, col){
         
         //* busca la primera pieza que encuentra adelante
-        for (let i = row + 1, stop = stopMeter ; i < 16; i++){
+        for (let i = row + 1, stop = emptySpacesParam ; i < 16; i++){
         
             // si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][col])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, i, col), depth-1).value) + blackPlaceWeight.rookEval[i][col],
+                        value: (((blackValuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, i, col), depth-1).value) + blackPlaceWeight.rookEval[i][col],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1098,7 +1127,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[i][col] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Rook + blackPlaceWeight.rookEval[i][col] - moveWhite( movePiece(matriz, row, col, i, col), depth-1).value,
+                        value: blackValuePieces.Rook + blackPlaceWeight.rookEval[i][col] - moveWhite( movePiece(matriz, row, col, i, col), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1116,13 +1145,13 @@ function moveBlack(matriz, depth = deepness) {
         } 
 
         //* busca la primera pieza que encuentra atras
-        for (let i = row-1, stop = stopMeter; i > 0; i--){
+        for (let i = row-1, stop = emptySpacesParam; i > 0; i--){
 
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][col])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating)  - moveWhite(movePiece(matriz, row, col, i, col),depth-1).value) + blackPlaceWeight.rookEval[i][col],
+                        value: (((blackValuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating)  - moveWhite(movePiece(matriz, row, col, i, col),depth-1).value) + blackPlaceWeight.rookEval[i][col],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1136,7 +1165,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[i][col] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Rook + blackPlaceWeight.rookEval[i][col] - moveWhite( movePiece(matriz, row, col, i, col), depth-1).value,
+                        value: blackValuePieces.Rook + blackPlaceWeight.rookEval[i][col] - moveWhite( movePiece(matriz, row, col, i, col), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1155,13 +1184,13 @@ function moveBlack(matriz, depth = deepness) {
         }
         
         //* busca la primera pieza a la derecha
-        for (let j = col-1, stop = stopMeter; j > 0; j--){
+        for (let j = col-1, stop = emptySpacesParam; j > 0; j--){
 
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[row][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value) + blackPlaceWeight.rookEval[row][j],
+                        value: (((blackValuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value) + blackPlaceWeight.rookEval[row][j],
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -1175,7 +1204,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[row][j] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Rook + blackPlaceWeight.rookEval[row][j] - moveWhite( movePiece(matriz, row, col, row, j), depth-1).value,
+                        value: blackValuePieces.Rook + blackPlaceWeight.rookEval[row][j] - moveWhite( movePiece(matriz, row, col, row, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -1193,13 +1222,13 @@ function moveBlack(matriz, depth = deepness) {
         }
 
         //* busca la primera pieza a la izquierda
-        for (let j = col+1, stop = stopMeter; j < 16; j++){
+        for (let j = col+1, stop = emptySpacesParam; j < 16; j++){
 
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[row][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value) + blackPlaceWeight.rookEval[row][j],
+                        value: (((blackValuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value) + blackPlaceWeight.rookEval[row][j],
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -1213,7 +1242,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[row][j] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Rook + blackPlaceWeight.rookEval[row][j] - moveWhite( movePiece(matriz, row, col, row, j), depth-1).value,
+                        value: blackValuePieces.Rook + blackPlaceWeight.rookEval[row][j] - moveWhite( movePiece(matriz, row, col, row, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -1234,13 +1263,13 @@ function moveBlack(matriz, depth = deepness) {
     function blackBishopMoves(matriz, row, col){
         //* busca la primera pieza en diagonal inferior derecha
         loop:
-        for (let i = row-1, j = col -1, stop = stopMeter; i > 0 && j > 0; i--, j--){
+        for (let i = row-1, j = col -1, stop = emptySpacesParam; i > 0 && j > 0; i--, j--){
         
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (valuePieces[letterToName[matriz[i][j]]] * weightPieces.eating - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.bishopEval[i][j],
+                        value: (blackValuePieces[letterToName[matriz[i][j]]] * weightPieces.eating - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.bishopEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1254,7 +1283,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Bishop + blackPlaceWeight.bishopEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: blackValuePieces.Bishop + blackPlaceWeight.bishopEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1274,13 +1303,13 @@ function moveBlack(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal inferior izquierda
         loop:
-        for (let i = row-1, j = col+1, stop = stopMeter; i > 0 && j < 16; i--, j++){
+        for (let i = row-1, j = col+1, stop = emptySpacesParam; i > 0 && j < 16; i--, j++){
             
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.bishopEval[i][j],
+                        value: (((blackValuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.bishopEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1294,7 +1323,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Bishop + blackPlaceWeight.bishopEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: blackValuePieces.Bishop + blackPlaceWeight.bishopEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1314,13 +1343,13 @@ function moveBlack(matriz, depth = deepness) {
     
         //* busca la primera pieza en diagonal superior derecha"
         loop: 
-        for (let i = row+1, j = col-1, stop = stopMeter; i < 16 && j > 0; i++, j--){
+        for (let i = row+1, j = col-1, stop = emptySpacesParam; i < 16 && j > 0; i++, j--){
             
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.bishopEval[i][j],
+                        value: (((blackValuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.bishopEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1334,7 +1363,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Bishop + blackPlaceWeight.bishopEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: blackValuePieces.Bishop + blackPlaceWeight.bishopEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1353,13 +1382,13 @@ function moveBlack(matriz, depth = deepness) {
     
         //* busca la primera pieza en diagonal superior izquierda
         loop:
-        for (let i = row+1, j = col+1, stop = stopMeter; i < 16 && j < 16; i++, j++){
+        for (let i = row+1, j = col+1, stop = emptySpacesParam; i < 16 && j < 16; i++, j++){
     
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.bishopEval[i][j],
+                        value: (((blackValuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.bishopEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1374,7 +1403,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Bishop + blackPlaceWeight.bishopEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: blackValuePieces.Bishop + blackPlaceWeight.bishopEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1395,13 +1424,13 @@ function moveBlack(matriz, depth = deepness) {
     function blackQueenMoves(matriz, row, col){
 
         //* busca la primera pieza que encuentra adelante
-        for (let i = row + 1, stop = stopMeter ; i < 16; i++){
+        for (let i = row + 1, stop = emptySpacesParam ; i < 16; i++){
     
             // si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][col])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, i, col), depth-1).value) + blackPlaceWeight.queenEval[i][col],
+                        value: (((blackValuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, i, col), depth-1).value) + blackPlaceWeight.queenEval[i][col],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1415,7 +1444,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[i][col] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen + blackPlaceWeight.queenEval[i][col] - moveWhite( movePiece(matriz, row, col, i, col), depth-1).value,
+                        value: blackValuePieces.Queen + blackPlaceWeight.queenEval[i][col] - moveWhite( movePiece(matriz, row, col, i, col), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1433,13 +1462,13 @@ function moveBlack(matriz, depth = deepness) {
         } 
 
         //* busca la primera pieza que encuentra atras
-        for (let i = row-1, stop = stopMeter; i > 0; i--){
+        for (let i = row-1, stop = emptySpacesParam; i > 0; i--){
     
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][col])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating)  - moveWhite(movePiece(matriz, row, col, i, col),depth-1).value) + blackPlaceWeight.queenEval[i][col],
+                        value: (((blackValuePieces[letterToName[matriz[i][col]]]) * weightPieces.eating)  - moveWhite(movePiece(matriz, row, col, i, col),depth-1).value) + blackPlaceWeight.queenEval[i][col],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1453,7 +1482,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[i][col] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen + blackPlaceWeight.queenEval[i][col] - moveWhite( movePiece(matriz, row, col, i, col), depth-1).value,
+                        value: blackValuePieces.Queen + blackPlaceWeight.queenEval[i][col] - moveWhite( movePiece(matriz, row, col, i, col), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1472,13 +1501,13 @@ function moveBlack(matriz, depth = deepness) {
         }
         
         //* busca la primera pieza a la derecha
-        for (let j = col-1, stop = stopMeter; j > 0; j--){
+        for (let j = col-1, stop = emptySpacesParam; j > 0; j--){
     
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[row][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value) + blackPlaceWeight.queenEval[row][j],
+                        value: (((blackValuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value) + blackPlaceWeight.queenEval[row][j],
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -1492,7 +1521,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[row][j] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen + blackPlaceWeight.queenEval[row][j] - moveWhite( movePiece(matriz, row, col, row, j), depth-1).value,
+                        value: blackValuePieces.Queen + blackPlaceWeight.queenEval[row][j] - moveWhite( movePiece(matriz, row, col, row, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -1510,13 +1539,13 @@ function moveBlack(matriz, depth = deepness) {
         }
     
         //* busca la primera pieza a la izquierda
-        for (let j = col+1, stop = stopMeter; j < 16; j++){
+        for (let j = col+1, stop = emptySpacesParam; j < 16; j++){
     
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[row][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value) + blackPlaceWeight.queenEval[row][j],
+                        value: (((blackValuePieces[letterToName[matriz[row][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, row, j), depth-1).value) + blackPlaceWeight.queenEval[row][j],
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -1530,7 +1559,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[row][j] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen + blackPlaceWeight.queenEval[row][j] - moveWhite( movePiece(matriz, row, col, row, j), depth-1).value,
+                        value: blackValuePieces.Queen + blackPlaceWeight.queenEval[row][j] - moveWhite( movePiece(matriz, row, col, row, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: row,
@@ -1549,13 +1578,13 @@ function moveBlack(matriz, depth = deepness) {
         
         //* busca la primera pieza en diagonal inferior derecha
         loop:
-        for (let i = row-1, j = col -1, stop = stopMeter; i > 0 && j > 0; i--, j--){
+        for (let i = row-1, j = col -1, stop = emptySpacesParam; i > 0 && j > 0; i--, j--){
        
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (valuePieces[letterToName[matriz[i][j]]] * weightPieces.eating - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.queenEval[i][j],
+                        value: (blackValuePieces[letterToName[matriz[i][j]]] * weightPieces.eating - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.queenEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1569,7 +1598,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen + blackPlaceWeight.queenEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: blackValuePieces.Queen + blackPlaceWeight.queenEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1589,13 +1618,13 @@ function moveBlack(matriz, depth = deepness) {
 
         //* busca la primera pieza en diagonal inferior izquierda
         loop:
-        for (let i = row-1, j = col+1, stop = stopMeter; i > 0 && j < 16; i--, j++){
+        for (let i = row-1, j = col+1, stop = emptySpacesParam; i > 0 && j < 16; i--, j++){
             
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.queenEval[i][j],
+                        value: (((blackValuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.queenEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1609,7 +1638,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen + blackPlaceWeight.queenEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: blackValuePieces.Queen + blackPlaceWeight.queenEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1629,13 +1658,13 @@ function moveBlack(matriz, depth = deepness) {
     
         //* busca la primera pieza en diagonal superior derecha"
         loop: 
-        for (let i = row+1, j = col-1, stop = stopMeter; i < 16 && j > 0; i++, j--){
+        for (let i = row+1, j = col-1, stop = emptySpacesParam; i < 16 && j > 0; i++, j--){
             
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.queenEval[i][j],
+                        value: (((blackValuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite(movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.queenEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1649,7 +1678,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen + blackPlaceWeight.queenEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: blackValuePieces.Queen + blackPlaceWeight.queenEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1668,13 +1697,13 @@ function moveBlack(matriz, depth = deepness) {
     
         //* busca la primera pieza en diagonal superior izquierda
         loop:
-        for (let i = row+1, j = col+1, stop = stopMeter; i < 16 && j < 16; i++, j++){
+        for (let i = row+1, j = col+1, stop = emptySpacesParam; i < 16 && j < 16; i++, j++){
     
             //si encuentra una blanca, la come
             if(whitePieces.includes(matriz[i][j])){
                 possibleMovementsBlack.push(
                     {
-                        value: (((valuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.queenEval[i][j],
+                        value: (((blackValuePieces[letterToName[matriz[i][j]]]) * weightPieces.eating) - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value) + blackPlaceWeight.queenEval[i][j],
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1689,7 +1718,7 @@ function moveBlack(matriz, depth = deepness) {
             else if(matriz[i][j] == ' ' && stop > 0){
                 possibleMovementsBlack.push(
                     {
-                        value: valuePieces.Queen + blackPlaceWeight.queenEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
+                        value: blackValuePieces.Queen + blackPlaceWeight.queenEval[i][j] - moveWhite( movePiece(matriz, row, col, i, j), depth-1).value,
                         from_row: row,
                         from_col: col,
                         to_row: i,
@@ -1742,7 +1771,7 @@ function moveBlack(matriz, depth = deepness) {
             let matrizBlanca = movePiece(matriz, row, col, row+1, col+1)
             possibleMovementsBlack.push(
                 {
-                value: blackPlaceWeight.pawnEval[row+1][col+1] + (valuePieces[letterToName[matriz[row+1][col+1]]]) * weightPieces.eating - moveWhite( matrizBlanca, depth-1).value,
+                value: blackPlaceWeight.pawnEval[row+1][col+1] + (blackValuePieces[letterToName[matriz[row+1][col+1]]]) * weightPieces.eating - moveWhite( matrizBlanca, depth-1).value,
                 from_row: row,
                 from_col: col,
                 to_row: (row+1),
@@ -1756,7 +1785,7 @@ function moveBlack(matriz, depth = deepness) {
             let matrizBlanca = movePiece(matriz, row, col, row+1, col-1)
             possibleMovementsBlack.push(
                 {
-                    value: blackPlaceWeight.pawnEval[row+1][col-1] + (valuePieces[letterToName[matriz[row+1][col-1]]]) * weightPieces.eating - moveWhite( matrizBlanca, depth-1).value,
+                    value: blackPlaceWeight.pawnEval[row+1][col-1] + (blackValuePieces[letterToName[matriz[row+1][col-1]]]) * weightPieces.eating - moveWhite( matrizBlanca, depth-1).value,
                     from_row: row,
                     from_col: col,
                     to_row: (row+1),
