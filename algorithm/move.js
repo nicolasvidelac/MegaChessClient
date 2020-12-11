@@ -18,7 +18,7 @@ function moveWhite(matriz, depth = depthParam) {
     
     //itero sobre toda la matriz buscando mis piezas 
     //y ejecuto la funcion correspondiente cuando encuentro una pieza
-     for( let col = 0; col < 16; col++ ){
+    for( let col = 0; col < 16; col++ ){
         for( let row = 15; row > 0; row-- ){
 
             switch (matriz[row][col]){
