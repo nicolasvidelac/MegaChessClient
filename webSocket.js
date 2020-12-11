@@ -2,7 +2,8 @@
 const Challenged = require('./responses/challenged');
 const fs = require('fs');
 const { my_turn } = require('./responses/my_turn');
-const { client } = require('websocket')
+const { client } = require('websocket');
+const { makeMatriz } = require('./utilities/makeMatriz');
 
 //lee mi authtoken de un archivo
 var authtoken = fs.readFileSync('authtoken.txt').toString();
@@ -51,10 +52,10 @@ ws.on('connect', function (connection) {
                 //muestro quien me desafio
                 console.log("challenged by ", message.data.username)
                 
-                if(message.data.username != 'Julieta'){
+                // if(message.data.username != 'Julieta'){
                     //manda la respuesta al desafio
                     connection.sendUTF(Challenged.challenged(message.data.board_id));
-                }
+                // }
 
             break;
 

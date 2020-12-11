@@ -91,6 +91,10 @@ function moveWhite(matriz, depth = depthParam) {
             to_col: 0
         }
     }
+    // if(depth == depthParam){
+    //     console.table(matriz)
+    //     console.log(possibleMovementsWhite[index])
+    // }
 
     // devuelvo los datos desde y hacia del movimiento de mayor valor
     return result;
@@ -99,7 +103,7 @@ function moveWhite(matriz, depth = depthParam) {
         
         for (let i = -2; i < 3; i += 4) {
             for (let j = -1; j < 2; j += 2) {
-                if ( 1 < row && row < 14 && 0 < col && col < 15 ) {
+                if( 0 <= row+i && row+i <= 15 && 0 <= col+j && col+j <= 15 ){
                     if(blackPieces.includes(matriz[row+i][col+j])){
                         possibleMovementsWhite.push(
                             {
@@ -130,7 +134,7 @@ function moveWhite(matriz, depth = depthParam) {
         for (let i = -1; i < 2; i += 2) {
             for (let j = -2; j < 3; j += 4) {
 
-                if( 0 < row && row < 14 && 1 < col && col < 15 ){
+                if( 0 <= row+i && row+i <= 15 && 0 <= col+j && col+j <= 15 ){
                     if(blackPieces.includes(matriz[row+i][col+j])){
                         possibleMovementsWhite.push(
                             {
@@ -997,6 +1001,10 @@ function moveBlack(matriz, depth = depthParam) {
             to_col: 0
         }
     }
+    // if(depth == depthParam){
+    //     console.table(matriz)
+    //     console.log(possibleMovementsBlack[index])
+    // }
     
     // devuelvo los datos desde y hacia del movimiento de mayor valor
     return result;
@@ -1005,7 +1013,7 @@ function moveBlack(matriz, depth = depthParam) {
 
         for (let i = -2; i < 3; i += 4) {
             for (let j = -1; j < 2; j += 2) {
-                if ( 1 < row && row < 14 && 0 < col && col < 15 ) {
+                if( 0 <= row+i && row+i <= 15 && 0 <= col+j && col+j <= 15 ){
                     if(whitePieces.includes(matriz[row+i][col+j])){
                         possibleMovementsBlack.push(
                             {
@@ -1036,7 +1044,7 @@ function moveBlack(matriz, depth = depthParam) {
         for (let i = -1; i < 2; i += 2) {
             for (let j = -2; j < 3; j += 4) {
 
-                if( 0 < row && row < 14 && 1 < col && col < 15 ){
+                if( 0 <= row+i && row+i <= 15 && 0 <= col+j && col+j <= 15 ){
                     if(whitePieces.includes(matriz[row+i][col+j])){
                         possibleMovementsBlack.push(
                             {
