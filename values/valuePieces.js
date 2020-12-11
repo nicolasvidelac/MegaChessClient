@@ -13,5 +13,5 @@ exports.blackValuePieces = {
     Bishop: 30,   //solo 30
     Rook:   37.5, //entre 35 y 50
     Queen:  45,   //entre 40 y 50
-    King:   70    //entre 75 y 80
+    King:   80    //entre 75 y 80
 }

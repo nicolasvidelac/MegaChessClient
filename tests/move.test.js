@@ -540,7 +540,7 @@ describe('black queen', () => {
                     from_col: 5,
                     to_row: 6,
                     to_col: 5,
-                    value: 741,
+                    value: 841,
                 }
             ],
             [
@@ -568,7 +568,7 @@ describe('black queen', () => {
                     from_col: 5,
                     to_row: 6,
                     to_col: 15,
-                    value: 739.5,
+                    value: 839.5,
                 }
             ],
             [
@@ -596,7 +596,7 @@ describe('black queen', () => {
                     from_col: 5,
                     to_row: 6,
                     to_col: 3,
-                    value: 740,
+                    value: 840,
                 }
             ],
             [
@@ -624,7 +624,7 @@ describe('black queen', () => {
                     from_col: 5,
                     to_row: 6,
                     to_col: 6,
-                    value: 460,
+                    value: 560,
                 }
             ],
             [
@@ -680,7 +680,7 @@ describe('black queen', () => {
                     from_col: 5,
                     to_row: 8,
                     to_col: 3,
-                    value: 740,
+                    value: 840,
                 }
             ],
             [
@@ -708,7 +708,7 @@ describe('black queen', () => {
                     from_col: 5,
                     to_row: 8,
                     to_col: 7,
-                    value: 840.5,
+                    value: 940.5,
                 }
             ]
         ]   
@@ -896,7 +896,7 @@ describe('black rook', () => {
                     from_col: 5,
                     to_row: 6,
                     to_col: 5,
-                    value: 741,
+                    value: 841,
                 }
             ],
             [
@@ -924,7 +924,7 @@ describe('black rook', () => {
                     from_col: 5,
                     to_row: 6,
                     to_col: 15,
-                    value: 740,
+                    value: 840,
                 }
             ],
             [
@@ -952,7 +952,7 @@ describe('black rook', () => {
                     from_col: 5,
                     to_row: 6,
                     to_col: 3,
-                    value: 800,
+                    value: 900,
                 }
             ]
         ]   
@@ -990,7 +990,7 @@ describe('white bishop', () => {
                     from_col: 11,
                     to_row: 11,
                     to_col: 14,
-                    value: 732,
+                    value: 722,
                 }
             ],
             [
@@ -1111,7 +1111,7 @@ describe('black bishop', () => {
                     from_col: 5,
                     to_row: 6,
                     to_col: 6,
-                    value: 560.5,
+                    value: 660.5,
                 }
             ],
             [
@@ -1139,7 +1139,7 @@ describe('black bishop', () => {
                     from_col: 4,
                     to_row: 5,
                     to_col: 3,
-                    value: 561,
+                    value: 661,
                 }
             ],
             [
@@ -1167,7 +1167,7 @@ describe('black bishop', () => {
                     from_col: 5,
                     to_row: 8,
                     to_col: 3,
-                    value: 740.5,
+                    value: 840.5,
                 }
             ],
             [
@@ -1195,7 +1195,7 @@ describe('black bishop', () => {
                     from_col: 5,
                     to_row: 8,
                     to_col: 7,
-                    value: 741,
+                    value: 841,
                 }
             ]
         ]   
@@ -1317,7 +1317,7 @@ describe('white king', () => {
                     from_col: 5,
                     to_row: 6,
                     to_col: 4,
-                    value: 256
+                    value: 156
                 }
             ],
             [
@@ -1429,7 +1429,7 @@ describe('white king', () => {
                     from_col: 5,
                     to_row: 7,
                     to_col: 6,
-                    value: 259
+                    value: 159
                 }
             ]
         ]   
@@ -1494,7 +1494,7 @@ describe('black king', () => {
                     from_col: 5,
                     to_row: 7,
                     to_col: 5,
-                    value: 667,
+                    value: 767,
                 }
             ],
             [
@@ -1550,7 +1550,7 @@ describe('black king', () => {
                     from_col: 5,
                     to_row: 6,
                     to_col: 4,
-                    value: 697,
+                    value: 797,
                 }
             ],
             [
@@ -1634,7 +1634,7 @@ describe('black king', () => {
                     from_col: 5,
                     to_row: 7,
                     to_col: 4,
-                    value: 697,
+                    value: 797,
                 }
             ],
             [
@@ -1662,7 +1662,7 @@ describe('black king', () => {
                     from_col: 5,
                     to_row: 7,
                     to_col: 6,
-                    value: 696
+                    value: 796
                 }
             ]
         ]   
@@ -1933,7 +1933,7 @@ describe('black horse', () => {
                     from_col: 5,
                     to_row: 7,
                     to_col: 4,
-                    value: 701.5,
+                    value: 801.5,
                 }
             ],
             [
@@ -1961,7 +1961,7 @@ describe('black horse', () => {
                     from_col: 5,
                     to_row: 7,
                     to_col: 6,
-                    value: 702,
+                    value: 802,
                 }
             ],
             [
@@ -2045,7 +2045,7 @@ describe('black horse', () => {
                     from_col: 5,
                     to_row: 8,
                     to_col: 7,
-                    value: 702,
+                    value: 802,
                 }
             ],
             [
@@ -2073,7 +2073,7 @@ describe('black horse', () => {
                     from_col: 5,
                     to_row: 10,
                     to_col: 7,
-                    value: 661,
+                    value: 761,
                 }
             ],
             [
@@ -2101,7 +2101,7 @@ describe('black horse', () => {
                     from_col: 5,
                     to_row: 10,
                     to_col: 3,
-                    value: 701.5,
+                    value: 801.5,
                 }
             ],
             [
@@ -2129,7 +2129,7 @@ describe('black horse', () => {
                     from_col: 5,
                     to_row: 8,
                     to_col: 3,
-                    value: 740,
+                    value: 840,
                 }
             ],
         ]

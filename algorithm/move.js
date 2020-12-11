@@ -7,7 +7,6 @@ const { weightPieces } = require("../values/weightPieces");
 const { movePiece } = require("../utilities/movePiece");
 
 function moveWhite(matriz, depth = depthParam) {
-
     //si depth es 0, es porque se llego al fin del bucle 
     if(depth == 0){
         return { value: 0 }
@@ -913,7 +912,6 @@ function moveWhite(matriz, depth = depthParam) {
 }
 
 function moveBlack(matriz, depth = depthParam) {
-
     //si depth es 0, es porque se llego al fin del bucle 
     if(depth == 0){
         return {value: 0}

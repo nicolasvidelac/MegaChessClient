@@ -12,9 +12,9 @@ exports.my_turn = (data) => {
     switch (data.actual_turn) {
         
         case 'black':
-            // console.log("turno black")
+            console.log("turno black")
             result = moveBlack(makeMatriz(data.board))
-            // console.log('enviado')
+            console.log('enviado')
             return JSON.stringify({
                 action: 'move',
                 data: {
@@ -28,9 +28,9 @@ exports.my_turn = (data) => {
             })
         
         case 'white':
-            // console.log("turno white")
+            console.log("turno white")
             result = moveWhite(makeMatriz(data.board))
-            // console.log('enviado')
+            console.log('enviado')
             return JSON.stringify({
                 action: 'move',
                 data: {
