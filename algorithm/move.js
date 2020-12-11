@@ -91,10 +91,6 @@ function moveWhite(matriz, depth = depthParam) {
             to_col: 0
         }
     }
-    // if(depth == depthParam){
-    //     console.table(matriz)
-    //     console.log(possibleMovementsWhite[index])
-    // }
 
     // devuelvo los datos desde y hacia del movimiento de mayor valor
     return result;
@@ -916,7 +912,6 @@ function moveWhite(matriz, depth = depthParam) {
     }
 }
 
-
 function moveBlack(matriz, depth = depthParam) {
 
     //si depth es 0, es porque se llego al fin del bucle 
@@ -1001,10 +996,6 @@ function moveBlack(matriz, depth = depthParam) {
             to_col: 0
         }
     }
-    // if(depth == depthParam){
-    //     console.table(matriz)
-    //     console.log(possibleMovementsBlack[index])
-    // }
     
     // devuelvo los datos desde y hacia del movimiento de mayor valor
     return result;
@@ -1819,7 +1810,6 @@ function moveBlack(matriz, depth = depthParam) {
         }
     }
 }
-
 
 module.exports = {
     moveBlack : moveBlack,

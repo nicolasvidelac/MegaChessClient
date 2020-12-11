@@ -22,7 +22,7 @@ exports.makeMatriz = (board) => {
         }
     } catch (error) {
         console.log(error)
-        throw new Error('string enviado incompleto')
+        throw new Error('string board incompleto')
     }
     
     return matriz;

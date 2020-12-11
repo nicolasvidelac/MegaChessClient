@@ -52,11 +52,11 @@ test( 'should return json', () => {
 
 test( 'should throw username error', () => {
     let data = {
-        "board_id":" ",
-        "turn_token":" ",
+        "board_id":"2d348356-2e79-4961-ac36-1b111e8c42a5",
+        "turn_token":"a70573bb-138f-4171-a200-66258f546755",
         "username":"gabriel",
         "actual_turn":"white",
-        "board":" ",
+        "board":"rrhhbbqqkkbbhhrrrrhhbbqqkkbbhhrrpppppppppppppppppppppppppppppppp                                                                                                                        P       PPPPPPPP PPPPPPPPPPPPPPPPPPPPPPPRRHHBBQQKKBBHHRRRRHHBBQQKKBBHHRR",
         "move_left":19,
     }
     
