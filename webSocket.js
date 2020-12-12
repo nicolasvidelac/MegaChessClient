@@ -3,7 +3,6 @@ const Challenged = require('./responses/challenged');
 const fs = require('fs');
 const { my_turn } = require('./responses/my_turn');
 const { client } = require('websocket');
-const { makeMatriz } = require('./utilities/makeMatriz');
 
 //lee mi authtoken de un archivo
 var authtoken = fs.readFileSync('authtoken.txt').toString();
